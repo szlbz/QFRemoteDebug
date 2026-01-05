@@ -183,8 +183,8 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Control = CBCPU
     AnchorSideTop.Side = asrCenter
     Left = 441
-    Height = 57
-    Top = 238
+    Height = 50
+    Top = 241
     Width = 135
     Caption = '修改CPU'
     Font.CharSet = ANSI_CHARSET

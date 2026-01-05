@@ -1,0 +1,114 @@
+object QFCompilerRun: TQFCompilerRun
+  Left = 309
+  Height = 330
+  Top = 203
+  Width = 631
+  ActiveControl = btnRemoteDebug
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsDialog
+  Caption = 'Compiler / Run Tool'
+  ClientHeight = 330
+  ClientWidth = 631
+  Color = clBtnFace
+  DesignTimePPI = 192
+  Font.CharSet = ANSI_CHARSET
+  Font.Color = clBlack
+  Font.Height = -24
+  Font.Name = 'Century'
+  Font.Pitch = fpVariable
+  Font.Quality = fqDraft
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  object btnRemoteDebug: TButton
+    Left = 16
+    Height = 50
+    Hint = '编译当前project及运行当前projec'
+    Top = 152
+    Width = 596
+    Caption = 'Compiler / Run'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 0
+    OnClick = btnRemoteDebugClick
+  end
+  object pInfo: TPanel
+    Left = 0
+    Height = 43
+    Top = 287
+    Width = 631
+    Align = alBottom
+    BevelOuter = bvLowered
+    ParentBackground = False
+    TabOrder = 1
+  end
+  object CBOS: TComboBox
+    Left = 16
+    Height = 36
+    Top = 88
+    Width = 136
+    ItemHeight = 28
+    ItemIndex = 0
+    Items.Strings = (
+      'linux'
+      'win64'
+      'win32'
+    )
+    Style = csDropDownList
+    TabOrder = 2
+    Text = 'linux'
+  end
+  object Label1: TLabel
+    Left = 16
+    Height = 28
+    Top = 56
+    Width = 41
+    Caption = 'OS:'
+  end
+  object Label2: TLabel
+    Left = 208
+    Height = 28
+    Top = 56
+    Width = 77
+    Caption = 'CPU：'
+  end
+  object CBCPU: TComboBox
+    Left = 208
+    Height = 36
+    Top = 88
+    Width = 232
+    ItemHeight = 28
+    ItemIndex = 0
+    Items.Strings = (
+      'aarch64'
+      'x86_64'
+      'loongarch64'
+      'arm'
+      'i386'
+      'riscv64'
+    )
+    Style = csDropDownList
+    TabOrder = 3
+    Text = 'aarch64'
+  end
+  object BtSaveConfig: TButton
+    AnchorSideTop.Control = CBCPU
+    AnchorSideTop.Side = asrCenter
+    Left = 441
+    Height = 50
+    Top = 81
+    Width = 135
+    Caption = '修改CPU'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -24
+    Font.Name = 'Century'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
+    TabOrder = 4
+    Visible = False
+    OnClick = BtSaveConfigClick
+  end
+end

@@ -24,6 +24,11 @@
         <Filename Value="QFRemoteDebug.pas"/>
         <UnitName Value="QFRemoteDebug"/>
       </Item>
+      <Item>
+        <Filename Value="QFCompilerRununit.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="QFCompilerRununit"/>
+      </Item>
     </Files>
     <RequiredPkgs>
       <Item>

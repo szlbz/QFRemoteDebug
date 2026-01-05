@@ -8,13 +8,14 @@ unit QFRemoteDebug;
 interface
 
 uses
-  QFRemoteDebugunit, LazarusPackageIntf;
+  QFRemoteDebugunit, QFCompilerRununit, LazarusPackageIntf;
 
 implementation
 
 procedure Register;
 begin
   RegisterUnit('QFRemoteDebugunit', @QFRemoteDebugunit.Register);
+  RegisterUnit('QFCompilerRununit', @QFCompilerRununit.Register);
 end;
 
 initialization
