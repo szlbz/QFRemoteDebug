@@ -1,0 +1,105 @@
+object Form2: TForm2
+  Left = 193
+  Height = 660
+  Top = 215
+  Width = 698
+  Caption = 'QFRemoteDebugServer'
+  ClientHeight = 660
+  ClientWidth = 698
+  Color = clBtnFace
+  DesignTimePPI = 192
+  Font.Color = clWindowText
+  Font.Height = -28
+  Font.Name = 'MS Sans Serif'
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
+  OnClose = FormClose
+  OnCreate = FormCreate
+  object Label1: TLabel
+    Left = 28
+    Height = 32
+    Top = 67
+    Width = 124
+    Caption = 'Listen Port'
+  end
+  object eServerPort: TEdit
+    Left = 28
+    Height = 40
+    Top = 107
+    Width = 128
+    TabOrder = 0
+    Text = '8080'
+  end
+  object btnListen: TButton
+    AnchorSideTop.Control = eServerPort
+    AnchorSideTop.Side = asrCenter
+    Left = 176
+    Height = 59
+    Top = 98
+    Width = 208
+    Caption = 'Listen'
+    TabOrder = 1
+    OnClick = btnListenClick
+  end
+  object Memo1: TMemo
+    AnchorSideTop.Control = eServerPort
+    AnchorSideTop.Side = asrBottom
+    Left = 28
+    Height = 425
+    Top = 167
+    Width = 641
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Top = 20
+    Lines.Strings = (
+      'Memo1'
+    )
+    ScrollBars = ssAutoVertical
+    TabOrder = 2
+    WordWrap = False
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 52
+    Top = 608
+    Width = 698
+    Align = alBottom
+    BevelOuter = bvLowered
+    ParentBackground = False
+    TabOrder = 3
+  end
+  object Label2: TLabel
+    Left = 28
+    Height = 32
+    Top = 8
+    Width = 82
+    Caption = 'Label2'
+  end
+  object RtcHttpServer1: TRtcHttpServer
+    OnConnect = RtcHttpServer1Connect
+    OnListenStart = RtcHttpServer1ListenStart
+    OnListenStop = RtcHttpServer1ListenStop
+    Left = 528
+    Top = 200
+  end
+  object RtcDataProvider1: TRtcDataProvider
+    Server = RtcHttpServer1
+    OnCheckRequest = RtcDataProvider1CheckRequest
+    OnDataReceived = RtcDataProvider1DataReceived
+    OnDataSent = RtcDataProvider1DataSent
+    Left = 304
+    Top = 232
+  end
+  object IdIPWatch1: TIdIPWatch
+    Active = False
+    HistoryFilename = 'iphist.dat'
+    Left = 472
+    Top = 72
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 15000
+    OnTimer = Timer1Timer
+    Left = 437
+    Top = 34
+  end
+end

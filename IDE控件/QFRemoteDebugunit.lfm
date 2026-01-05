@@ -1,0 +1,219 @@
+object QFRemoteDebug: TQFRemoteDebug
+  Left = 309
+  Height = 556
+  Top = 203
+  Width = 631
+  ActiveControl = btnRemoteDebug
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsDialog
+  Caption = 'QFRemoteDebug Assistant'
+  ClientHeight = 556
+  ClientWidth = 631
+  Color = clBtnFace
+  DesignTimePPI = 192
+  Font.CharSet = ANSI_CHARSET
+  Font.Color = clBlack
+  Font.Height = -24
+  Font.Name = 'Century'
+  Font.Pitch = fpVariable
+  Font.Quality = fqDraft
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
+  OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  object Label4: TLabel
+    Left = 323
+    Height = 28
+    Top = 19
+    Width = 129
+    Caption = 'Server Port'
+  end
+  object Label5: TLabel
+    Left = 16
+    Height = 28
+    Top = 19
+    Width = 171
+    Caption = 'Server Address'
+  end
+  object eServerPort: TEdit
+    Left = 323
+    Height = 36
+    Top = 59
+    Width = 112
+    TabOrder = 1
+    Text = '8080'
+  end
+  object eServerAddr: TEdit
+    Left = 16
+    Height = 36
+    Top = 59
+    Width = 285
+    TabOrder = 0
+    Text = '127.0.0.1'
+    OnExit = eServerAddrExit
+  end
+  object btnRemoteDebug: TButton
+    Left = 16
+    Height = 50
+    Hint = '编译当前project/上传及运行当前project进行调试'
+    Top = 312
+    Width = 596
+    Caption = 'Remote Debug'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 2
+    OnClick = btnRemoteDebugClick
+  end
+  object pInfo: TPanel
+    Left = 0
+    Height = 43
+    Top = 513
+    Width = 631
+    Align = alBottom
+    BevelOuter = bvLowered
+    ParentBackground = False
+    TabOrder = 4
+  end
+  object btnUpdateLibrary: TButton
+    AnchorSideTop.Control = btnRemoteDebug
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 50
+    Top = 372
+    Width = 596
+    BorderSpacing.Top = 10
+    Caption = '更新交叉编译lib文件'
+    TabOrder = 3
+    OnClick = btnUpdateLibraryClick
+  end
+  object Label6: TLabel
+    AnchorSideTop.Control = btnUpdateLibrary
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 28
+    Top = 432
+    Width = 75
+    BorderSpacing.Top = 10
+    Caption = 'Label6'
+  end
+  object Label7: TLabel
+    AnchorSideTop.Control = Label6
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 28
+    Top = 470
+    Width = 75
+    BorderSpacing.Top = 10
+    Caption = 'Label7'
+  end
+  object Label8: TLabel
+    AnchorSideLeft.Control = eServerAddr
+    AnchorSideTop.Side = asrCenter
+    Left = 16
+    Height = 28
+    Top = 127
+    Width = 75
+    Caption = 'Label8'
+  end
+  object Label9: TLabel
+    AnchorSideLeft.Control = eServerAddr
+    AnchorSideTop.Side = asrCenter
+    Left = 16
+    Height = 28
+    Top = 171
+    Width = 75
+    Caption = 'Label9'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clRed
+    Font.Height = -24
+    Font.Name = 'Century'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
+  end
+  object CBOS: TComboBox
+    Left = 16
+    Height = 36
+    Top = 248
+    Width = 136
+    ItemHeight = 28
+    ItemIndex = 0
+    Items.Strings = (
+      'linux'
+    )
+    Style = csDropDownList
+    TabOrder = 5
+    Text = 'linux'
+  end
+  object Label1: TLabel
+    Left = 16
+    Height = 28
+    Top = 216
+    Width = 41
+    Caption = 'OS:'
+  end
+  object Label2: TLabel
+    Left = 208
+    Height = 28
+    Top = 216
+    Width = 77
+    Caption = 'CPU：'
+  end
+  object CBCPU: TComboBox
+    Left = 208
+    Height = 36
+    Top = 248
+    Width = 232
+    ItemHeight = 28
+    ItemIndex = 0
+    Items.Strings = (
+      'aarch64'
+      'x86_64'
+      'loongarch64'
+      'arm'
+      'i386'
+      'riscv64'
+    )
+    Style = csDropDownList
+    TabOrder = 6
+    Text = 'aarch64'
+  end
+  object BtSaveConfig: TButton
+    AnchorSideTop.Control = CBCPU
+    AnchorSideTop.Side = asrCenter
+    Left = 441
+    Height = 57
+    Top = 238
+    Width = 135
+    Caption = '修改CPU'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -24
+    Font.Name = 'Century'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
+    TabOrder = 7
+    OnClick = BtSaveConfigClick
+  end
+  object RtcHttpClient1: TRtcHttpClient
+    MultiThreaded = True
+    ServerAddr = 'localhost'
+    ServerPort = '80'
+    AutoConnect = True
+    Left = 512
+    Top = 16
+  end
+  object RtcDataRequest1: TRtcDataRequest
+    AutoSyncEvents = True
+    Client = RtcHttpClient1
+    OnBeginRequest = RtcDataRequest1BeginRequest
+    OnDataReceived = RtcDataRequest1DataReceived
+    OnDataOut = RtcDataRequest1DataOut
+    OnDataIn = RtcDataRequest1DataIn
+    OnDataSent = RtcDataRequest1DataSent
+    Left = 512
+    Top = 112
+  end
+end
