@@ -50,8 +50,8 @@
     </Units>
     <Debugger>
       <ClassConfig Version="1">
-        <Config ConfigName="RemoteDebug" ConfigClass="TGDBMIServerDebugger" DebuggerFilename="D:\QFLazarus4.4\fpcbootstrap\x86_64-win64\gdb\aarch64-linux\gdb.exe" Active="True" UID="{155847D1-E60B-40C4-907D-1A05156B26F1}">
-          <Properties Debugger_Remote_Hostname="192.168.31.54"/>
+        <Config ConfigName="RemoteDebug" ConfigClass="TGDBMIServerDebugger" DebuggerFilename="D:\QFLazarus4.4\fpcbootstrap\x86_64-win64\gdb\aarch64-linux\gdb.exe" Active="True" UID="{C6F15284-E62F-4B66-867E-AAB45CAB81B7}">
+          <Properties Debugger_Remote_Hostname="192.168.31.240"/>
         </Config>
       </ClassConfig>
     </Debugger>

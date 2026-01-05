@@ -271,8 +271,9 @@ var
   ini: TIniFile;
 begin
   Memo1.Lines.Clear;
+  IdIPWatch1.HistoryFilename:='';
   Panel1.Caption := 'Listen IP ：'+IdIPWatch1.LocalIP;
-  Label2.Caption := 'Listen IP ：'+IdIPWatch1.LocalIP;
+  Label2.Caption := Panel1.Caption;
   ini := TIniFile.Create('QFRemoteDebugServer.ini');
   eServerPort.Text := ini.ReadString('系统参数', '端口', '8080');
   ini.Free;
