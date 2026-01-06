@@ -141,6 +141,8 @@ object QFRemoteDebug: TQFRemoteDebug
     ItemIndex = 0
     Items.Strings = (
       'linux'
+      'win64'
+      'win32'
     )
     Style = csDropDownList
     TabOrder = 5
@@ -195,6 +197,7 @@ object QFRemoteDebug: TQFRemoteDebug
     Font.Quality = fqDraft
     ParentFont = False
     TabOrder = 7
+    Visible = False
     OnClick = BtSaveConfigClick
   end
   object RtcHttpClient1: TRtcHttpClient

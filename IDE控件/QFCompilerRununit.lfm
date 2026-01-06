@@ -83,9 +83,9 @@ object QFCompilerRun: TQFCompilerRun
     Items.Strings = (
       'aarch64'
       'x86_64'
-      'loongarch64'
-      'arm'
       'i386'
+      'arm'
+      'loongarch64'
       'riscv64'
     )
     Style = csDropDownList

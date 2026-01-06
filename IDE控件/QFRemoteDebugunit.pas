@@ -148,25 +148,31 @@ end;
 
 procedure TQFRemoteDebug.btnUpdateLibraryClick(Sender: TObject);
 begin
-  if btnUpdateLibrary.Caption= 'Downloading ...' then
+  BtSaveConfigClick(Self);
+  if pos('win',TargetCPUOS)<=0 then
   begin
-    btnUpdateLibrary.Caption:='update Cross Library : '+TargetCPUOS;
-    IsDownLibFile:=False;
+    if btnUpdateLibrary.Caption= 'Downloading ...' then
+    begin
+      btnUpdateLibrary.Caption:='update Cross Library : '+TargetCPUOS;
+      IsDownLibFile:=False;
+    end
+    else
+      IsDownLibFile:=True;
+    btnUpdateLibrary.Enabled:=False;
+    if not RtcHttpClient1.isConnecting then
+      btnConnectClick(Self);
+    DeleteFile(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+ '\liblist.txt'));
+    with RtcDataRequest1 do
+    begin
+      Request.Info.AsString['request_type'] :='downloadliblist';
+      Request.Method := 'GET';
+      Request.FileName := '/DOWNLOADLIBLIST';
+      Post;
+    end;
+    btnUpdateLibrary.Enabled:=True;
   end
   else
-    IsDownLibFile:=True;
-  btnUpdateLibrary.Enabled:=False;
-  if not RtcHttpClient1.isConnecting then
-    btnConnectClick(Self);
-  DeleteFile(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+ '\liblist.txt'));
-  with RtcDataRequest1 do
-  begin
-    Request.Info.AsString['request_type'] :='downloadliblist';
-    Request.Method := 'GET';
-    Request.FileName := '/DOWNLOADLIBLIST';
-    Post;
-  end;
-  btnUpdateLibrary.Enabled:=True;
+    ShowMessage('windows程序不需要更新lib文件！');
 end;
 
 procedure TQFRemoteDebug.BtSaveConfigClick(Sender: TObject);
@@ -181,7 +187,7 @@ begin
   if Config.GetValue('ProjectOptions/Version/Value','')<>'' then
   begin
     TargetCPU:=CBCPU.Items[CBCPU.ItemIndex];
-    TargetOS:='linux';
+    TargetOS:=CBOS.Items[CBOS.ItemIndex];//'linux';
 
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetCPU:=TargetCPU;
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetOS:=TargetOS;
@@ -209,16 +215,16 @@ begin
     LazarusIDE.DoSaveAll([sfProjectSaving]);  //保存
     Config.Free;
     btnUpdateLibrary.Caption:='update Cross Library : '+TargetCPUOS;
-    if pos('win',TargetCPUOS)>0 then
-    begin
-      btnUpdateLibrary.Enabled:=False;
-      btnRemoteDebug.Enabled:=False;
-    end
-    else
-    begin
-      btnUpdateLibrary.Enabled:=True;
-      btnRemoteDebug.Enabled:=True;
-    end;
+    //if pos('win',TargetCPUOS)>0 then
+    //begin
+    //  btnUpdateLibrary.Enabled:=False;
+    //  btnRemoteDebug.Enabled:=False;
+    //end
+    //else
+    //begin
+    //  btnUpdateLibrary.Enabled:=True;
+    //  btnRemoteDebug.Enabled:=True;
+    //end;
   end
   else
   begin
@@ -275,16 +281,16 @@ begin
     if trim(TargetCPUOS)='-' then
       TargetCPUOS:=lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%});
 
-    if pos('win',TargetCPUOS)>0 then
-    begin
-      btnUpdateLibrary.Enabled:=False;
-      btnRemoteDebug.Enabled:=False;
-    end
-    else
-    begin
-      btnUpdateLibrary.Enabled:=True;
-      btnRemoteDebug.Enabled:=True;
-    end;
+    //if pos('win',TargetCPUOS)>0 then
+    //begin
+    //  btnUpdateLibrary.Enabled:=False;
+    //  btnRemoteDebug.Enabled:=False;
+    //end
+    //else
+    //begin
+    //  btnUpdateLibrary.Enabled:=True;
+    //  btnRemoteDebug.Enabled:=True;
+    //end;
 
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetCPU:=TargetCPU;
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetOS:=TargetOS;
@@ -372,33 +378,39 @@ end;
 
 procedure TQFRemoteDebug.btnRemoteDebugClick(Sender: TObject);
 begin
-  LazarusIDE.DoOpenProjectFile(LazarusIDE.ActiveProject.ProjectInfoFile,[ofRevert]); //重新打开project
-  btnRemoteDebug.Enabled:=False;
-  //编译当前project,编译成功后上传
-  if LazarusIDE.DoBuildProject(crBuild,[]) = mrOK then
+  BtSaveConfigClick(Self);
+  if pos('win',TargetCPUOS)<=0 then
   begin
-    if not RtcHttpClient1.isConnecting then
-      btnConnectClick(Self);
+    LazarusIDE.DoOpenProjectFile(LazarusIDE.ActiveProject.ProjectInfoFile,[ofRevert]); //重新打开project
+    btnRemoteDebug.Enabled:=False;
+    //编译当前project,编译成功后上传
+    if LazarusIDE.DoBuildProject(crBuild,[]) = mrOK then
+    begin
+      if not RtcHttpClient1.isConnecting then
+        btnConnectClick(Self);
 
-    pInfo.Caption := '上传中...';
-    with RtcDataRequest1 do
-    begin
-      // 先停止gdbserver
-      Request.Info.AsString['request_type'] := 'deletefile';
-      Post;
+      pInfo.Caption := '上传中...';
+      with RtcDataRequest1 do
+      begin
+        // 先停止gdbserver
+        Request.Info.AsString['request_type'] := 'deletefile';
+        Post;
+      end;
+      with RtcDataRequest1 do
+      begin
+        // File Name on Server (need to URL_encode all Query parameters)
+        Request.Info.AsString['request_type'] := 'debug';
+        Request.Query['file'] := URL_Encode(Utf8Encode(eRequestFileName));
+        // Local File Name
+        Request.Info.asText['file'] := eLocalFileName;
+        Post;
+      end;
+      LazarusIDE.DoRunProject;
     end;
-    with RtcDataRequest1 do
-    begin
-      // File Name on Server (need to URL_encode all Query parameters)
-      Request.Info.AsString['request_type'] := 'debug';
-      Request.Query['file'] := URL_Encode(Utf8Encode(eRequestFileName));
-      // Local File Name
-      Request.Info.asText['file'] := eLocalFileName;
-      Post;
-    end;
-    LazarusIDE.DoRunProject;
-  end;
-  btnRemoteDebug.Enabled:=True;
+    btnRemoteDebug.Enabled:=True;
+  end
+  else
+    ShowMessage('windows程序暂时不支持远程调试！');
 end;
 
 procedure TQFRemoteDebug.RtcDataRequest1BeginRequest(Sender: TRtcConnection);
