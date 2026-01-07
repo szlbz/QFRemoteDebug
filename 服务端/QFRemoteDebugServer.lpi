@@ -26,9 +26,6 @@
     </RunParams>
     <RequiredPackages>
       <Item>
-        <PackageName Value="indylaz"/>
-      </Item>
-      <Item>
         <PackageName Value="rtcsdk_fpc"/>
       </Item>
       <Item>
@@ -48,13 +45,6 @@
         <ResourceBaseClass Value="Form"/>
       </Unit>
     </Units>
-    <Debugger>
-      <ClassConfig Version="1">
-        <Config ConfigName="RemoteDebug" ConfigClass="TGDBMIServerDebugger" DebuggerFilename="D:\QFLazarus4.4\fpcbootstrap\x86_64-win64\gdb\aarch64-linux\gdb.exe" Active="True" UID="{C6F15284-E62F-4B66-867E-AAB45CAB81B7}">
-          <Properties Debugger_Remote_Hostname="192.168.31.240"/>
-        </Config>
-      </ClassConfig>
-    </Debugger>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>

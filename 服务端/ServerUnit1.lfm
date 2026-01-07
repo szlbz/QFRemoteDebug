@@ -89,13 +89,6 @@ object Form2: TForm2
     Left = 304
     Top = 232
   end
-  object IdIPWatch1: TIdIPWatch
-    Active = False
-    HistoryEnabled = False
-    HistoryFilename = 'iphist.dat'
-    Left = 472
-    Top = 72
-  end
   object Timer1: TTimer
     Enabled = False
     Interval = 15000

@@ -9,11 +9,15 @@ uses
   Graphics, Controls, Forms,
   IniFiles,
   Process,
-  Dialogs, StdCtrls, ExtCtrls, IdIPWatch,
+  Dialogs, StdCtrls, ExtCtrls,
+  Sockets,
   {$ifdef linux}
   BaseUnix,Unix,
   cthreads,
   fpmkunit,
+  {$ENDIF}
+  {$IFDEF Windows}
+    jwaWindows, JwaWinType,
   {$ENDIF}
   crt,
   LazUtils,
@@ -27,7 +31,6 @@ type
   { TForm2 }
 
   TForm2 = class(TForm)
-    IdIPWatch1: TIdIPWatch;
     Label2: TLabel;
     Memo1: TMemo;
     Panel1: TPanel;
@@ -61,6 +64,206 @@ var
   Form2: TForm2;
 
 implementation
+
+
+Function GetLocalIP: string;
+{$IFDEF UNIX}
+const
+  CGDNSADDR = '8.8.8.8';
+  CGDNSPORT = 53;
+var
+  S: string;
+  VHostAddr: TSockAddr;
+  VLength: Integer;
+  VInetSockAddr: TInetSockAddr;
+  VSock, VError: LongInt;
+  VIPBuf: array[0..255] of Char = #0;
+{$ENDIF}
+{$IFDEF MSWINDOWS}
+type
+  P_hostent = ^hostent;      //这里不管64位还是32位都必须是PAnsiChar; PHostEnt改了结构，Win64位会不正常，因此重新定义
+  hostent = record
+    h_name: PAnsiChar;           // official name of host
+    h_aliases: PPAnsiChar;  // alias list
+    h_addrtype: Smallint;             // host address type
+    h_length: Smallint;               // length of address
+    case Integer of
+      0: (h_addr_list: PPAnsiChar); // list of addresses
+      1: (h_addr: PPAnsiChar);          // address, for backward compat
+    end;
+var
+  VWSAData: TWSAData;
+  VHostEnt: P_hostent; //PHostEnt;
+  VName: string;
+{$ENDIF}
+begin
+{$IFDEF UNIX}
+    VError := 0;
+    FillChar(VIPBuf, SizeOf(VIPBuf), #0);
+    VSock := FpSocket(AF_INET, SOCK_DGRAM, 0);
+    VInetSockAddr.sin_family := AF_INET;
+    VInetSockAddr.sin_port := htons(CGDNSPORT);
+    VInetSockAddr.sin_addr := StrToHostAddr(CGDNSADDR);
+    if (FpConnect(VSock, @VInetSockAddr, SizeOf(VInetSockAddr)) = 0) then
+      try
+        VLength := SizeOf(VHostAddr);
+        if (FpGetSockName(VSock, @VHostAddr, @VLength) = 0) then
+        begin
+          S := NetAddrToStr(VHostAddr.sin_addr);
+          StrPCopy(PChar(VIPBuf), S);
+        end
+        else
+          VError := SocketError;
+      finally
+        if (FpClose(VSock) <> 0) then
+          VError := SocketError;
+      end
+    else
+      VError := SocketError;
+    if (VError <> 0) then
+      Result := '127.0.0.1'
+    else
+      Result := StrPas(VIPBuf);
+{$ENDIF}
+{$IFDEF MSWINDOWS}
+{$HINTS OFF}
+      WSAStartup($101, VWSAData);
+{$HINTS ON}
+      SetLength(VName, 255);
+      GetHostName(PAnsiChar(VName), 255);
+      SetLength(VName, StrLen(PAnsiChar(VName)));
+      VHostEnt := P_hostent(GetHostByName(PAnsiChar(VName)));
+      Result := Format('%d.%d.%d.%d', [Byte(VHostEnt^.h_addr^[0]),
+          Byte(VHostEnt^.h_addr^[1]), Byte(VHostEnt^.h_addr^[2]), Byte(VHostEnt^.h_addr^[3])]);
+      SetLength(VName, 0);
+      WSACleanup;
+{$ENDIF}
+end;
+
+{$ifdef linux}
+function FindProcess(AFileName, ACmdLine: string): Integer;
+var
+  Info: TSearchRec;
+  pid: Integer;
+  f: TextFile;
+  fcmd: File;
+  line, sTmp, status: string;
+  buffer: array [0..4095] of AnsiChar;
+  bytesRead, i, cmdPos: Integer;
+begin
+  Result := 0;
+  if FindFirst('/proc/*', faDirectory, Info) = 0 then
+  begin
+    repeat
+      if TryStrToInt(Info.Name, pid) then
+      begin
+        // 读取进程cmdline
+        if FileExists('/proc/' + Info.Name + '/status') then
+        begin
+          AssignFile(f, '/proc/' + Info.Name + '/status');
+          Reset(f);
+          ReadLn(f, line);
+          if Pos('name:', Lowercase(line)) = 1 then
+            Delete(line, 1, Pos(#9, line));
+          status := '';
+          while not eof(f) do
+          begin
+            Readln(f, sTmp);
+            if Pos('state:', Lowercase(sTmp)) = 1 then
+            begin
+              Delete(sTmp, 1, Pos(#9, sTmp));
+              status := sTmp;
+              Break;
+            end;
+          end;
+          CloseFile(f);
+          if status <> '' then
+            if status[1] in ['Z', 'X'] then
+              Continue;
+
+          if (UpperCase(line)=UpperCase(AFileName)) or ((UpperCase(ExtractFileName(AFileName))) = UpperCase(line)) then
+          begin
+            if ACmdLine = '' then
+            begin
+              Result := pid;
+              Break
+            end
+            else begin
+              try
+                line := '';
+                { 非只读模式blockread永远读出来是空 }
+                Assign(fcmd, '/proc/' + Info.Name + '/cmdline');
+                FileMode := 0;  // 设置为只读模式
+                Reset(fcmd, 1);
+                try
+                  BlockRead(fcmd, buffer, SizeOf(buffer), bytesRead);
+                  for i := 0 to bytesRead - 1 do
+                  begin
+                    if buffer[i] = #0 then
+                    begin
+                      cmdPos := i + 1;
+                      Break
+                    end
+                    else
+                      buffer[i] := ' ';
+                  end;
+                  for i := cmdPos to bytesRead - 1 do
+                  begin
+                    if buffer[i] = #0 then
+                      buffer[i] := ' '; // 替换null字符为空格
+                  end;
+                  SetString(line, buffer, bytesRead);
+                  line := Trim(line);
+                finally
+                  CloseFile(fcmd);
+                end;
+              except
+                //
+              end;
+              if ACmdLine = line then
+              begin
+                Result := pid;
+                Break
+              end;
+            end;
+          end;
+        end;
+      end;
+    until FindNext(Info) <> 0;
+    FindClose(Info);
+  end;
+end;
+{$else}
+function FindProcess(AFileName, ACmdLine: string): Integer;
+var
+  ContinueLoop: BOOL;//用于判断进程遍历是否完成
+  FSnapshotHandle: THandle;
+  FProcessEntry64: {$IFDEF WIN32}PPROCESSENTRY32{$ELSE}PPROCESSENTRY64{$ENDIF};
+  FProcessEntry32: TPROCESSENTRY32;
+begin
+  Result := 0;
+  FSnapshotHandle := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+  FProcessEntry32.dwSize := Sizeof({$IFDEF WIN32}TPROCESSENTRY32{$ELSE}TPROCESSENTRY64{$ENDIF});
+  ContinueLoop := Process32First(FSnapshotHandle, FProcessEntry32);
+  FProcessEntry64 := {$IFDEF WIN32}PPROCESSENTRY32{$ELSE}PPROCESSENTRY64{$ENDIF}(@FProcessEntry32);
+  while integer(ContinueLoop) <> 0 do
+  begin
+    if ((UpperCase(ExtractFileName(FProcessEntry64^.szExeFile)) = UpperCase(AFileName))
+     or (UpperCase(FProcessEntry64^.szExeFile) = UpperCase(AFileName))) then
+    begin
+      EnableDebug(True);
+      if (ACmdLine = '') or (Pos(ACmdLine, Process_CmdLine(FProcessEntry32.th32ProcessID))> 0) then
+      begin
+        Result := FProcessEntry64^.th32ProcessID;
+        Break;
+      end;
+      EnableDebug(False);
+    end;
+    ContinueLoop := Process32Next(FSnapshotHandle, FProcessEntry32);
+  end;
+  CloseHandle(FSnapshotHandle);
+end;
+{$endif}
 
 {$ifdef linux}
 procedure TForm2.CopyLib;
@@ -228,7 +431,6 @@ begin
     end;
   end;
 end;
-
 {$endif}
 
 {$R *.lfm}
@@ -271,8 +473,7 @@ var
   ini: TIniFile;
 begin
   Memo1.Lines.Clear;
-  IdIPWatch1.HistoryFilename:='';
-  Panel1.Caption := 'Listen IP ：'+IdIPWatch1.LocalIP;
+  Panel1.Caption := GetLocalIP;
   Label2.Caption := Panel1.Caption;
   ini := TIniFile.Create('QFRemoteDebugServer.ini');
   eServerPort.Text := ini.ReadString('系统参数', '端口', '8080');
@@ -414,9 +615,8 @@ var
     Proc := TProcess.Create(nil);
     try
       Proc.Executable := 'pkill';
-      Proc.Parameters.Add('-f');  // 根据完整命令行匹配
-
-      Proc.Parameters.Add('gdbserver');//ProcessName);
+      //Proc.Parameters.Add('-f');  // 根据完整命令行匹配
+      Proc.Parameters.Add('gdbserver');
       Proc.Options := [poWaitOnExit];
       Proc.Execute;
     finally
@@ -499,6 +699,9 @@ begin
 
         Process := TProcess.Create(nil);
         Process.CurrentDirectory := SetDirSeparators(Extractfilepath(Paramstr(0))+'RemoteDebugFile/');
+        //Process.Executable := 'gdbserver';
+        //Process.Parameters.Add(':2345');
+        //Process.Parameters.Add(f1);
         Process.Executable := 'sh';
         Process.Parameters.Add('run.sh');
         //Process.Options := [poUsePipes, poStderrToOutPut, poNoConsole];

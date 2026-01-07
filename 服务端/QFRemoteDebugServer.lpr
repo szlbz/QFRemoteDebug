@@ -9,7 +9,7 @@ uses
   {$IFDEF HASAMIGA}
   athreads,
   {$ENDIF}
-  Forms, indylaz,
+  Forms,
   ServerUnit1 in 'ServerUnit1.pas', Interfaces {Form2};
 
 {$R *.res}
