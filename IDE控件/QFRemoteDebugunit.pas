@@ -126,7 +126,7 @@ begin
   ToolQFRemoteDebugCommand:=RegisterIDECommand(CmdCatToolMenu,
     'QFRemoteDebug',
     MenuItemCaption,
-    IDEShortCut(VK_UNKNOWN, []), // <- set here your default shortcut
+    IDEShortCut(VK_F10, []), // <- set here your default shortcut
     CleanIDEShortCut, nil, @ShowQFRemoteDebug);
 
   // register menu item in Project menu
@@ -186,12 +186,12 @@ begin
       if CBSUBCPUOS.Text='loongarch64-linux' then
       begin
         if LowerCase(Copy(f[i],1,12))=LowerCase('-FL/lib64/ld') then
-          f[i]:= '-FL/lib64/ld.so.1';//abi1.0;
+          f[i]:= '-FL/lib64/ld.so.1';
       end;
       if CBSUBCPUOS.text='loongarch64-linux_abi2.0' then
       begin
         if LowerCase(Copy(f[i],1,12))=LowerCase('-FL/lib64/ld') then
-          f[i]:= '-FL/lib64/ld-linux-loongarch-lp64d.so.1' ; //abi2.0
+          f[i]:= '-FL/lib64/ld-linux-loongarch-lp64d.so.1' ;
       end;
     end;
     f.SaveToFile(p);
@@ -317,16 +317,6 @@ begin
     LazarusIDE.DoSaveAll([sfProjectSaving]);  //保存
     Config.Free;
     btnUpdateLibrary.Caption:='update Cross Library : '+TargetCPUOS;
-    //if pos('win',TargetCPUOS)>0 then
-    //begin
-    //  btnUpdateLibrary.Enabled:=False;
-    //  btnRemoteDebug.Enabled:=False;
-    //end
-    //else
-    //begin
-    //  btnUpdateLibrary.Enabled:=True;
-    //  btnRemoteDebug.Enabled:=True;
-    //end;
   end
   else
   begin
@@ -388,17 +378,6 @@ begin
     if trim(TargetCPUOS)='-' then
       TargetCPUOS:=lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%});
 
-    //if pos('win',TargetCPUOS)>0 then
-    //begin
-    //  btnUpdateLibrary.Enabled:=False;
-    //  btnRemoteDebug.Enabled:=False;
-    //end
-    //else
-    //begin
-    //  btnUpdateLibrary.Enabled:=True;
-    //  btnRemoteDebug.Enabled:=True;
-    //end;
-
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetCPU:=TargetCPU;
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetOS:=TargetOS;
 
@@ -427,6 +406,7 @@ begin
     Config.SetValue('ProjectOptions/Debugger/ClassConfig/Config/Properties/Debugger_Remote_Hostname',eServerAddr.text);
     Config.SetValue('CompilerOptions/CodeGeneration/TargetCPU/Value',TargetCPU);
     Config.SetValue('CompilerOptions/CodeGeneration/TargetOS/Value',TargetOS);
+    Config.SetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','True'); //强制启用Debug
   end
   else
   begin
@@ -514,7 +494,7 @@ begin
         Request.Info.asText['file'] := eLocalFileName;
         Post;
       end;
-      LazarusIDE.DoRunProject;
+      LazarusIDE.DoRunProject;//运行要debug的project
     end;
     btnRemoteDebug.Enabled:=True;
   end

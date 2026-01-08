@@ -109,7 +109,7 @@ begin
   ToolQFCompilerRunCommand:=RegisterIDECommand(CmdCatToolMenu,
     'QFCompilerRun',
     MenuItemCaption,
-    IDEShortCut(VK_UNKNOWN, []), // <- set here your default shortcut
+    IDEShortCut(VK_F6, []), // <- set here your default shortcut
     CleanIDEShortCut, nil, @ShowQFCompilerRun);
 
   // register menu item in Project menu
@@ -351,8 +351,7 @@ begin
   begin
     GenerateDebugInfo:=Config.GetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','');
     if (CheckBox1.Checked) then
-    Config.SetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','False')
-      //Config.DeleteValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo')
+      Config.SetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','False')
     else
       Config.SetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','True');
   end

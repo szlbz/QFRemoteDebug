@@ -80,9 +80,9 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 50
-    Top = 420
+    Top = 440
     Width = 596
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 30
     Caption = '更新交叉编译lib文件'
     TabOrder = 3
     OnClick = btnUpdateLibraryClick
@@ -92,7 +92,7 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 28
-    Top = 480
+    Top = 500
     Width = 75
     BorderSpacing.Top = 10
     Caption = 'Label6'
@@ -102,7 +102,7 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 28
-    Top = 518
+    Top = 538
     Width = 75
     BorderSpacing.Top = 10
     Caption = 'Label7'
