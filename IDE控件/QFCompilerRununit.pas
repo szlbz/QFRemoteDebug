@@ -188,7 +188,23 @@ var
   LibDirList:TStringList;
   i:Integer;
   libdir,s:String;
+  Config: TConfigStorage;
+  GenerateDebugInfo:String;
 begin
+  try
+    Config:=GetIDEConfigStorage(LazarusIDE.ActiveProject.ProjectInfoFile,true);
+    if Config.GetValue('ProjectOptions/Version/Value','')<>'' then
+    begin
+      GenerateDebugInfo:=Config.GetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','');
+      if LowerCase(GenerateDebugInfo)='true' then
+         CheckBox1.Checked:=False
+      else
+         CheckBox1.Checked:=True;
+    end;
+  finally
+     Config.Free;
+  end;
+
   crosspath:=LazarusIDE.GetPrimaryConfigPath;
   crosspath:=crosspath.Replace('config_lazarus','',[]);
   crosspath:=SetDirSeparators(crosspath+'cross\lib\');
