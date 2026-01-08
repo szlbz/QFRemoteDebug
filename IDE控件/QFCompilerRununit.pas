@@ -27,16 +27,24 @@ type
     BtSaveConfig: TButton;
     CBOS: TComboBox;
     CBCPU: TComboBox;
+    CBSUBCPUOS: TComboBox;
+    CheckBox1: TCheckBox;
     Label1: TLabel;
     Label2: TLabel;
     btnRemoteDebug: TButton;
+    Label3: TLabel;
     pInfo: TPanel;
     procedure BtSaveConfigClick(Sender: TObject);
+    procedure CBCPUChange(Sender: TObject);
     procedure eServerAddrExit(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure btnRemoteDebugClick(Sender: TObject);
     procedure SetProjectConfig;
+    procedure SetProjectDebugConfig;
+    procedure GetCrossLibList;
+    procedure ModifyFpccfg;
+    function GetlibVer:String;
   private
     { Private declarations }
     LibFileList:TStringList;
@@ -112,6 +120,100 @@ begin
 
 end;
 
+function TQFCompilerRun.GetLibVer:String;
+var
+  f:TStringList;
+  p,s,str:String;
+  i:Integer;
+begin
+  Result:='';
+  p:=LazarusIDE.GetPrimaryConfigPath;
+  p:=p.Replace('config_lazarus','',[]);
+  p:=SetDirSeparators(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
+  try
+    f:=TStringList.Create;
+    f.LoadFromFile(p);
+    for i:=0 to f.Count-1 do
+    begin
+      str:=SetDirSeparators('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text);
+      if pos(str,SetDirSeparators(f[i]))>0 then
+      begin
+        Result:=Copy(f[i],pos(CBCPU.Text+'-'+CBOS.Text,f[i]),Length(f[i]));
+        Break;
+      end;
+    end;
+  finally
+    f.Free;
+  end;
+end;
+
+procedure TQFCompilerRun.ModifyFpccfg;
+var
+  f:TStringList;
+  p,s:String;
+  i:Integer;
+begin
+  p:=LazarusIDE.GetPrimaryConfigPath;
+  p:=p.Replace('config_lazarus','',[]);
+  p:=SetDirSeparators(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
+  try
+    f:=TStringList.Create;
+    f.LoadFromFile(p);
+    for i:=0 to f.Count-1 do
+    begin
+      if pos(SetDirSeparators('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text), f[i])>0 then
+      begin
+        s:=Copy(f[i],1,pos(CBCPU.Text+'-'+CBOS.Text,f[i])-1);
+        f[i]:=s+CBSUBCPUOS.Text;
+      end;
+      if CBSUBCPUOS.Text='loongarch64-linux' then
+      begin
+        if LowerCase(Copy(f[i],1,12))=LowerCase('-FL/lib64/ld') then
+          f[i]:= '-FL/lib64/ld.so.1';//abi1.0;
+      end;
+      if CBSUBCPUOS.text='loongarch64-linux_abi2.0' then
+      begin
+        if LowerCase(Copy(f[i],1,12))=LowerCase('-FL/lib64/ld') then
+          f[i]:= '-FL/lib64/ld-linux-loongarch-lp64d.so.1' ; //abi2.0
+      end;
+    end;
+    f.SaveToFile(p);
+  finally
+    f.Free;
+  end;
+end;
+
+procedure TQFCompilerRun.GetCrossLibList;
+var
+  LibDirList:TStringList;
+  i:Integer;
+  libdir,s:String;
+begin
+  crosspath:=LazarusIDE.GetPrimaryConfigPath;
+  crosspath:=crosspath.Replace('config_lazarus','',[]);
+  crosspath:=SetDirSeparators(crosspath+'cross\lib\');
+  try
+    CBSUBCPUOS.Items.Clear;
+    LibDirList:=TStringList.Create;
+    LibDirList:=FindAllDirectories(crosspath, False);
+    libdir:=CBCPU.Text+'-'+CBOS.Text;
+    for i := 0 to LibDirList.Count - 1 do
+    begin
+      if pos(libdir, LibDirList[i])>0 then
+      begin
+        s:=Copy(LibDirList[i],pos(libdir,LibDirList[i]),Length(LibDirList[i]));
+        CBSUBCPUOS.Items.Add(s);
+      end;
+    end;
+    //if  libdir='loongarch64-linux' then
+      CBSUBCPUOS.ItemIndex:=CBSUBCPUOS.Items.IndexOf(GetlibVer);
+    //else
+      //CBSUBCPUOS.ItemIndex:=0;
+  finally
+     LibDirList.Free;
+  end;
+end;
+
 procedure TQFCompilerRun.BtSaveConfigClick(Sender: TObject);
 var
   Config: TConfigStorage;
@@ -149,6 +251,11 @@ begin
     ShowMessage('新建project，先保存project再使用。');
     btnRemoteDebug.Enabled:=False;
   end;
+end;
+
+procedure TQFCompilerRun.CBCPUChange(Sender: TObject);
+begin
+  GetCrossLibList;
 end;
 
 procedure TQFCompilerRun.eServerAddrExit(Sender: TObject);
@@ -217,17 +324,44 @@ begin
   Config.Free;
 end;
 
+procedure TQFCompilerRun.SetProjectDebugConfig;
+var
+  Config: TConfigStorage;
+  TargetFile:String;
+  GenerateDebugInfo:String;
+begin
+  Config:=GetIDEConfigStorage(LazarusIDE.ActiveProject.ProjectInfoFile,true);
+  if Config.GetValue('ProjectOptions/Version/Value','')<>'' then
+  begin
+    GenerateDebugInfo:=Config.GetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','');
+    if (CheckBox1.Checked) then
+    Config.SetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','False')
+      //Config.DeleteValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo')
+    else
+      Config.SetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','True');
+  end
+  else
+  begin
+    ShowMessage('新建project，先保存project再使用。');
+    btnRemoteDebug.Enabled:=False;
+  end;
+  Config.Free;
+end;
+
 procedure TQFCompilerRun.FormCreate(Sender: TObject);
 begin
   SetProjectConfig;
   CBCPU.Text:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetCPU;
   CBOS.Text:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetOS;
   if CBOS.ItemIndex<0 then CBOS.ItemIndex:=0;
+  GetCrossLibList;
 end;
 
 procedure TQFCompilerRun.btnRemoteDebugClick(Sender: TObject);
 begin
   BtSaveConfigClick(Self);
+  ModifyFpccfg;
+  SetProjectDebugConfig;
   LazarusIDE.DoOpenProjectFile(LazarusIDE.ActiveProject.ProjectInfoFile,[ofRevert]); //重新打开project
   btnRemoteDebug.Enabled:=False;
   //编译当前project

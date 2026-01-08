@@ -1,13 +1,13 @@
 object QFRemoteDebug: TQFRemoteDebug
   Left = 309
-  Height = 556
+  Height = 639
   Top = 203
   Width = 631
   ActiveControl = btnRemoteDebug
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = 'QFRemoteDebug Assistant'
-  ClientHeight = 556
+  ClientHeight = 639
   ClientWidth = 631
   Color = clBtnFace
   DesignTimePPI = 192
@@ -57,7 +57,7 @@ object QFRemoteDebug: TQFRemoteDebug
     Left = 16
     Height = 50
     Hint = '编译当前project/上传及运行当前project进行调试'
-    Top = 312
+    Top = 360
     Width = 596
     Caption = 'Remote Debug'
     ParentShowHint = False
@@ -68,7 +68,7 @@ object QFRemoteDebug: TQFRemoteDebug
   object pInfo: TPanel
     Left = 0
     Height = 43
-    Top = 513
+    Top = 596
     Width = 631
     Align = alBottom
     BevelOuter = bvLowered
@@ -80,7 +80,7 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 50
-    Top = 372
+    Top = 420
     Width = 596
     BorderSpacing.Top = 10
     Caption = '更新交叉编译lib文件'
@@ -92,7 +92,7 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 28
-    Top = 432
+    Top = 480
     Width = 75
     BorderSpacing.Top = 10
     Caption = 'Label6'
@@ -102,27 +102,31 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 28
-    Top = 470
+    Top = 518
     Width = 75
     BorderSpacing.Top = 10
     Caption = 'Label7'
   end
   object Label8: TLabel
     AnchorSideLeft.Control = eServerAddr
-    AnchorSideTop.Side = asrCenter
+    AnchorSideTop.Control = eServerAddr
+    AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 28
-    Top = 127
+    Top = 105
     Width = 75
+    BorderSpacing.Top = 10
     Caption = 'Label8'
   end
   object Label9: TLabel
-    AnchorSideLeft.Control = eServerAddr
-    AnchorSideTop.Side = asrCenter
+    AnchorSideLeft.Control = Label8
+    AnchorSideTop.Control = Label8
+    AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 28
-    Top = 171
+    Top = 143
     Width = 75
+    BorderSpacing.Top = 10
     Caption = 'Label9'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clRed
@@ -133,10 +137,13 @@ object QFRemoteDebug: TQFRemoteDebug
     ParentFont = False
   end
   object CBOS: TComboBox
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 36
-    Top = 248
-    Width = 136
+    Top = 217
+    Width = 176
+    BorderSpacing.Top = 5
     ItemHeight = 28
     ItemIndex = 0
     Items.Strings = (
@@ -147,25 +154,28 @@ object QFRemoteDebug: TQFRemoteDebug
     Style = csDropDownList
     TabOrder = 5
     Text = 'linux'
+    OnChange = CBOSChange
   end
   object Label1: TLabel
     Left = 16
     Height = 28
-    Top = 216
+    Top = 184
     Width = 41
     Caption = 'OS:'
   end
   object Label2: TLabel
-    Left = 208
+    AnchorSideLeft.Control = Label1
+    Left = 16
     Height = 28
-    Top = 216
+    Top = 271
     Width = 77
     Caption = 'CPU：'
   end
   object CBCPU: TComboBox
-    Left = 208
+    AnchorSideLeft.Control = Label1
+    Left = 16
     Height = 36
-    Top = 248
+    Top = 303
     Width = 232
     ItemHeight = 28
     ItemIndex = 0
@@ -180,13 +190,14 @@ object QFRemoteDebug: TQFRemoteDebug
     Style = csDropDownList
     TabOrder = 6
     Text = 'aarch64'
+    OnChange = CBOSChange
   end
   object BtSaveConfig: TButton
     AnchorSideTop.Control = CBCPU
     AnchorSideTop.Side = asrCenter
-    Left = 441
+    Left = 272
     Height = 50
-    Top = 241
+    Top = 296
     Width = 135
     Caption = '修改CPU'
     Font.CharSet = ANSI_CHARSET
@@ -199,6 +210,34 @@ object QFRemoteDebug: TQFRemoteDebug
     TabOrder = 7
     Visible = False
     OnClick = BtSaveConfigClick
+  end
+  object CBSUBCPUOS: TComboBox
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrBottom
+    Left = 240
+    Height = 36
+    Top = 217
+    Width = 372
+    BorderSpacing.Top = 5
+    ItemHeight = 28
+    ItemIndex = 0
+    Items.Strings = (
+      '---'
+      'abi1.0'
+      'abi2.0'
+      'openwrt'
+    )
+    Style = csDropDownList
+    TabOrder = 8
+    Text = '---'
+  end
+  object Label3: TLabel
+    AnchorSideTop.Control = Label1
+    Left = 240
+    Height = 28
+    Top = 184
+    Width = 179
+    Caption = 'OS Sub options:'
   end
   object RtcHttpClient1: TRtcHttpClient
     MultiThreaded = True

@@ -26,8 +26,10 @@ type
     BtSaveConfig: TButton;
     CBOS: TComboBox;
     CBCPU: TComboBox;
+    CBSUBCPUOS: TComboBox;
     Label1: TLabel;
     Label2: TLabel;
+    Label3: TLabel;
     Label4: TLabel;
     eServerPort: TEdit;
     Label5: TLabel;
@@ -43,6 +45,7 @@ type
     procedure btnConnectClick(Sender: TObject);
     procedure btnUpdateLibraryClick(Sender: TObject);
     procedure BtSaveConfigClick(Sender: TObject);
+    procedure CBOSChange(Sender: TObject);
     procedure eServerAddrExit(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -56,7 +59,10 @@ type
     procedure SetProjectConfig;
     procedure DownLibFiles(i:int64);
     procedure fixLib(CrossPaths:String);
-  private
+    procedure GetCrossLibList;
+    procedure ModifyFpccfg;
+    function GetlibVer:String;
+ private
     { Private declarations }
     LibFileList:TStringList;
     Nextno:Int64;
@@ -131,6 +137,97 @@ begin
 
 end;
 
+function TQFRemoteDebug.GetlibVer:String;
+var
+  f:TStringList;
+  p,s,str:String;
+  i:Integer;
+begin
+  Result:='';
+  p:=LazarusIDE.GetPrimaryConfigPath;
+  p:=p.Replace('config_lazarus','',[]);
+  p:=SetDirSeparators(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
+  try
+    f:=TStringList.Create;
+    f.LoadFromFile(p);
+    for i:=0 to f.Count-1 do
+    begin
+      str:=SetDirSeparators('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text);
+      if pos(str,SetDirSeparators(f[i]))>0 then
+      begin
+        Result:=Copy(f[i],pos(CBCPU.Text+'-'+CBOS.Text,f[i]),Length(f[i]));
+        Break;
+      end;
+    end;
+  finally
+    f.Free;
+  end;
+end;
+
+procedure TQFRemoteDebug.ModifyFpccfg;
+var
+  f:TStringList;
+  p,s:String;
+  i:Integer;
+begin
+  p:=LazarusIDE.GetPrimaryConfigPath;
+  p:=p.Replace('config_lazarus','',[]);
+  p:=SetDirSeparators(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
+  try
+    f:=TStringList.Create;
+    f.LoadFromFile(p);
+    for i:=0 to f.Count-1 do
+    begin
+      if pos(SetDirSeparators('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text), f[i])>0 then
+      begin
+        s:=Copy(f[i],1,pos(CBCPU.Text+'-'+CBOS.Text,f[i])-1);
+        f[i]:=s+CBSUBCPUOS.Text;
+      end;
+      if CBSUBCPUOS.Text='loongarch64-linux' then
+      begin
+        if LowerCase(Copy(f[i],1,12))=LowerCase('-FL/lib64/ld') then
+          f[i]:= '-FL/lib64/ld.so.1';//abi1.0;
+      end;
+      if CBSUBCPUOS.text='loongarch64-linux_abi2.0' then
+      begin
+        if LowerCase(Copy(f[i],1,12))=LowerCase('-FL/lib64/ld') then
+          f[i]:= '-FL/lib64/ld-linux-loongarch-lp64d.so.1' ; //abi2.0
+      end;
+    end;
+    f.SaveToFile(p);
+  finally
+    f.Free;
+  end;
+end;
+
+procedure TQFRemoteDebug.GetCrossLibList;
+var
+  LibDirList:TStringList;
+  i:Integer;
+  libdir,s:String;
+begin
+  crosspath:=LazarusIDE.GetPrimaryConfigPath;
+  crosspath:=crosspath.Replace('config_lazarus','',[]);
+  crosspath:=SetDirSeparators(crosspath+'cross\lib\');
+  try
+    CBSUBCPUOS.Items.Clear;
+    LibDirList:=TStringList.Create;
+    LibDirList:=FindAllDirectories(crosspath, False);
+    libdir:=CBCPU.Text+'-'+CBOS.Text;
+    for i := 0 to LibDirList.Count - 1 do
+    begin
+      if pos(libdir, LibDirList[i])>0 then
+      begin
+        s:=Copy(LibDirList[i],pos(libdir,LibDirList[i]),Length(LibDirList[i]));
+        CBSUBCPUOS.Items.Add(s);
+      end;
+    end;
+    CBSUBCPUOS.ItemIndex:=CBSUBCPUOS.Items.IndexOf(GetlibVer);
+  finally
+    LibDirList.Free;
+  end;
+end;
+
 procedure TQFRemoteDebug.btnConnectClick(Sender: TObject);
 begin
   with RtcHttpClient1 do
@@ -148,31 +245,35 @@ end;
 
 procedure TQFRemoteDebug.btnUpdateLibraryClick(Sender: TObject);
 begin
-  BtSaveConfigClick(Self);
-  if pos('win',TargetCPUOS)<=0 then
+  if MessageDlg('更新交叉编译lib','确定要更新交叉编译'+CBSUBCPUOS.Text+'lib文件？',mtConfirmation,mbYesNo,'')=mrYes then
   begin
-    if btnUpdateLibrary.Caption= 'Downloading ...' then
+    BtSaveConfigClick(Self);
+    TargetCPUOS:=CBSUBCPUOS.Text;
+    if pos('win',TargetCPUOS)<=0 then
     begin
-      btnUpdateLibrary.Caption:='update Cross Library : '+TargetCPUOS;
-      IsDownLibFile:=False;
+      if btnUpdateLibrary.Caption= 'Downloading ...' then
+      begin
+        btnUpdateLibrary.Caption:='update Cross Library : '+TargetCPUOS;
+        IsDownLibFile:=False;
+      end
+      else
+        IsDownLibFile:=True;
+      btnUpdateLibrary.Enabled:=False;
+      if not RtcHttpClient1.isConnecting then
+        btnConnectClick(Self);
+      DeleteFile(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+ '\liblist.txt'));
+      with RtcDataRequest1 do
+      begin
+        Request.Info.AsString['request_type'] :='downloadliblist';
+        Request.Method := 'GET';
+        Request.FileName := '/DOWNLOADLIBLIST';
+        Post;
+      end;
+      btnUpdateLibrary.Enabled:=True;
     end
     else
-      IsDownLibFile:=True;
-    btnUpdateLibrary.Enabled:=False;
-    if not RtcHttpClient1.isConnecting then
-      btnConnectClick(Self);
-    DeleteFile(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+ '\liblist.txt'));
-    with RtcDataRequest1 do
-    begin
-      Request.Info.AsString['request_type'] :='downloadliblist';
-      Request.Method := 'GET';
-      Request.FileName := '/DOWNLOADLIBLIST';
-      Post;
-    end;
-    btnUpdateLibrary.Enabled:=True;
-  end
-  else
-    ShowMessage('windows程序不需要更新lib文件！');
+      ShowMessage('windows程序不需要更新lib文件！');
+  end;
 end;
 
 procedure TQFRemoteDebug.BtSaveConfigClick(Sender: TObject);
@@ -192,7 +293,8 @@ begin
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetCPU:=TargetCPU;
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetOS:=TargetOS;
 
-    TargetCPUOS:=TargetCPU+'-'+TargetOS;
+    //TargetCPUOS:=TargetCPU+'-'+TargetOS;
+    TargetCPUOS:=CBSUBCPUOS.Text;
 
     eGDBFileName := StringReplace(LazarusIDE.GetPrimaryConfigPath,'config_lazarus','fpcbootstrap',[]);
 
@@ -231,6 +333,11 @@ begin
     ShowMessage('新建project，先保存project再使用。');
     btnRemoteDebug.Enabled:=False;
   end;
+end;
+
+procedure TQFRemoteDebug.CBOSChange(Sender: TObject);
+begin
+  GetCrossLibList;
 end;
 
 procedure TQFRemoteDebug.eServerAddrExit(Sender: TObject);
@@ -347,6 +454,7 @@ begin
   Label9.Caption:= TargetCPUOS;
   Label6.Caption:= '';
   Label7.Caption:='';
+  GetCrossLibList;
 end;
 
 procedure TQFRemoteDebug.RtcDataRequest1DataIn(Sender: TRtcConnection);
@@ -379,6 +487,7 @@ end;
 procedure TQFRemoteDebug.btnRemoteDebugClick(Sender: TObject);
 begin
   BtSaveConfigClick(Self);
+  ModifyFpccfg;
   if pos('win',TargetCPUOS)<=0 then
   begin
     LazarusIDE.DoOpenProjectFile(LazarusIDE.ActiveProject.ProjectInfoFile,[ofRevert]); //重新打开project
@@ -503,7 +612,8 @@ procedure TQFRemoteDebug.DownLibFiles(i:int64);
 var
   files,path:String;
 begin
-  files:='///'+TargetCPUOS+'/'+LibFileList.ValueFromIndex[i];
+  files:='///'+CBCPU.Text+'-'+CBOS.Text+'/'+LibFileList.ValueFromIndex[i];
+  //files:='///'+TargetCPUOS+'/'+LibFileList.ValueFromIndex[i];
   Label6.Caption:=IntToStr(i+1)+' / '+inttostr(LibFileList.Count) ;
   Label7.Caption:=LibFileList.ValueFromIndex[i];
   path:=LazarusIDE.GetPrimaryConfigPath;
