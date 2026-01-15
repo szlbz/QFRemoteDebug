@@ -19,8 +19,6 @@ uses
 
 type
 
-  { TTQFCompilerRun }
-
   { TQFCompilerRun }
 
   TQFCompilerRun = class(TForm)
@@ -28,14 +26,19 @@ type
     CBOS: TComboBox;
     CBCPU: TComboBox;
     CBSUBCPUOS: TComboBox;
-    CheckBox1: TCheckBox;
+    ComboBox1: TComboBox;
+    Edit1: TEdit;
     Label1: TLabel;
     Label2: TLabel;
     btnRemoteDebug: TButton;
     Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
     pInfo: TPanel;
     procedure BtSaveConfigClick(Sender: TObject);
     procedure CBCPUChange(Sender: TObject);
+    procedure CBSUBCPUOSChange(Sender: TObject);
+    procedure Edit1MouseEnter(Sender: TObject);
     procedure eServerAddrExit(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
@@ -197,9 +200,9 @@ begin
     begin
       GenerateDebugInfo:=Config.GetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','');
       if LowerCase(GenerateDebugInfo)='true' then
-         CheckBox1.Checked:=False
+         combobox1.ItemIndex:=0
       else
-         CheckBox1.Checked:=True;
+         combobox1.ItemIndex:=1;
     end;
   finally
      Config.Free;
@@ -221,10 +224,7 @@ begin
         CBSUBCPUOS.Items.Add(s);
       end;
     end;
-    //if  libdir='loongarch64-linux' then
-      CBSUBCPUOS.ItemIndex:=CBSUBCPUOS.Items.IndexOf(GetlibVer);
-    //else
-      //CBSUBCPUOS.ItemIndex:=0;
+    CBSUBCPUOS.ItemIndex:=CBSUBCPUOS.Items.IndexOf(GetlibVer);
   finally
      LibDirList.Free;
   end;
@@ -246,6 +246,7 @@ begin
 
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetCPU:=TargetCPU;
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetOS:=TargetOS;
+    LazarusIDE.ActiveProject.LazCompilerOptions.TargetFilename:=Edit1.Text;
 
     TargetCPUOS:=TargetCPU+'-'+TargetOS;
 
@@ -272,6 +273,30 @@ end;
 procedure TQFCompilerRun.CBCPUChange(Sender: TObject);
 begin
   GetCrossLibList;
+  CBSUBCPUOSChange(Self);
+end;
+
+procedure TQFCompilerRun.CBSUBCPUOSChange(Sender: TObject);
+var
+  TargetFile:String;
+  tmp:String;
+begin
+  TargetFile:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetFilename;
+  if pos('$(TargetCPU)',TargetFile)>0 then
+    TargetFile:=copy(TargetFile,1,pos('$(TargetCPU)',TargetFile)-2);
+
+  tmp:=CBSUBCPUOS.Text;
+  tmp:=tmp.Replace(CBCPU.Text+'-'+CBOS.Text,'',[]);
+  tmp:='$(TargetCPU)-$(TargetOS)'+tmp;
+  if CBSUBCPUOS.Text<>'' then
+    Edit1.Text:=TargetFile +'_'+tmp
+  else
+    Edit1.Text:=TargetFile;
+end;
+
+procedure TQFCompilerRun.Edit1MouseEnter(Sender: TObject);
+begin
+  Edit1.Hint:=Edit1.Text;
 end;
 
 procedure TQFCompilerRun.eServerAddrExit(Sender: TObject);
@@ -296,9 +321,9 @@ var
   TargetOS:String;
   guid: TGUID;
   guidStr: string;
+  tmp:String;
 begin
   LazarusIDE.DoSaveAll([sfProjectSaving]);  //保存
-
   Config:=GetIDEConfigStorage(LazarusIDE.ActiveProject.ProjectInfoFile,true);
   if Config.GetValue('ProjectOptions/Version/Value','')<>'' then
   begin
@@ -338,6 +363,18 @@ begin
   end;
   LazarusIDE.DoSaveAll([sfProjectSaving]);  //保存
   Config.Free;
+
+  TargetFile:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetFilename;
+  if pos('$(TargetCPU)',TargetFile)>0 then
+    TargetFile:=copy(TargetFile,1,pos('$(TargetCPU)',TargetFile)-2);
+
+  tmp:=CBSUBCPUOS.Text;
+  tmp:=tmp.Replace(CBCPU.Text+'-'+CBOS.Text,'',[]);
+  tmp:='$(TargetCPU)-$(TargetOS)'+tmp;
+  if CBSUBCPUOS.Text<>'' then
+    Edit1.Text:=TargetFile +'_'+tmp
+  else
+    Edit1.Text:=TargetFile;
 end;
 
 procedure TQFCompilerRun.SetProjectDebugConfig;
@@ -350,7 +387,7 @@ begin
   if Config.GetValue('ProjectOptions/Version/Value','')<>'' then
   begin
     GenerateDebugInfo:=Config.GetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','');
-    if (CheckBox1.Checked) then
+    if ComboBox1.ItemIndex=1 then
       Config.SetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','False')
     else
       Config.SetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','True');
@@ -370,6 +407,7 @@ begin
   CBOS.Text:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetOS;
   if CBOS.ItemIndex<0 then CBOS.ItemIndex:=0;
   GetCrossLibList;
+  CBSUBCPUOSChange(Self);
 end;
 
 procedure TQFCompilerRun.btnRemoteDebugClick(Sender: TObject);
@@ -389,7 +427,9 @@ begin
       LazarusIDE.DoRunProject;
       Close;
     end;
-  end;
+  end
+  else
+    Close;
   btnRemoteDebug.Enabled:=True;
 end;
 

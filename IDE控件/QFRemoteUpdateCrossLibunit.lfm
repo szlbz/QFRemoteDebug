@@ -1,13 +1,12 @@
-object QFRemoteDebug: TQFRemoteDebug
+object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   Left = 309
-  Height = 496
+  Height = 639
   Top = 203
   Width = 631
-  ActiveControl = btnRemoteDebug
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
-  Caption = 'QFRemoteDebug Assistant'
-  ClientHeight = 496
+  Caption = 'QFUpdate Cross Library Assistant'
+  ClientHeight = 639
   ClientWidth = 631
   Color = clBtnFace
   DesignTimePPI = 192
@@ -51,58 +50,47 @@ object QFRemoteDebug: TQFRemoteDebug
     Width = 285
     TabOrder = 0
     Text = '127.0.0.1'
-    OnExit = eServerAddrExit
-  end
-  object btnRemoteDebug: TButton
-    Left = 16
-    Height = 50
-    Hint = '编译当前project/上传及运行当前project进行调试'
-    Top = 360
-    Width = 596
-    Caption = 'Remote Debug'
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 2
-    OnClick = btnRemoteDebugClick
   end
   object pInfo: TPanel
     Left = 0
     Height = 43
-    Top = 453
+    Top = 596
     Width = 631
     Align = alBottom
     BevelOuter = bvLowered
     ParentBackground = False
     TabOrder = 3
   end
-  object Label8: TLabel
-    AnchorSideLeft.Control = eServerAddr
-    AnchorSideTop.Control = eServerAddr
+  object btnUpdateLibrary: TButton
     AnchorSideTop.Side = asrBottom
     Left = 16
-    Height = 28
-    Top = 105
-    Width = 75
-    BorderSpacing.Top = 10
-    Caption = 'Label8'
+    Height = 58
+    Top = 392
+    Width = 596
+    BorderSpacing.Top = 30
+    Caption = '更新交叉编译lib文件'
+    TabOrder = 2
+    OnClick = btnUpdateLibraryClick
   end
-  object Label9: TLabel
-    AnchorSideLeft.Control = Label8
-    AnchorSideTop.Control = Label8
+  object Label6: TLabel
+    AnchorSideTop.Control = btnUpdateLibrary
     AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 28
-    Top = 143
+    Top = 460
     Width = 75
     BorderSpacing.Top = 10
-    Caption = 'Label9'
-    Font.CharSet = ANSI_CHARSET
-    Font.Color = clRed
-    Font.Height = -24
-    Font.Name = 'Century'
-    Font.Pitch = fpVariable
-    Font.Quality = fqDraft
-    ParentFont = False
+    Caption = 'Label6'
+  end
+  object Label7: TLabel
+    AnchorSideTop.Control = Label6
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 28
+    Top = 498
+    Width = 75
+    BorderSpacing.Top = 10
+    Caption = 'Label7'
   end
   object CBOS: TComboBox
     AnchorSideTop.Control = Label1
@@ -163,10 +151,11 @@ object QFRemoteDebug: TQFRemoteDebug
   object BtSaveConfig: TButton
     AnchorSideTop.Control = CBCPU
     AnchorSideTop.Side = asrCenter
-    Left = 272
+    Left = 32
     Height = 50
-    Top = 296
+    Top = 344
     Width = 135
+    Anchors = [akLeft]
     Caption = '修改CPU'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -177,7 +166,6 @@ object QFRemoteDebug: TQFRemoteDebug
     ParentFont = False
     TabOrder = 6
     Visible = False
-    OnClick = BtSaveConfigClick
   end
   object CBSUBCPUOS: TComboBox
     AnchorSideTop.Control = Label3
@@ -188,16 +176,9 @@ object QFRemoteDebug: TQFRemoteDebug
     Width = 372
     BorderSpacing.Top = 5
     ItemHeight = 28
-    ItemIndex = 0
-    Items.Strings = (
-      '---'
-      'abi1.0'
-      'abi2.0'
-      'openwrt'
-    )
     Style = csDropDownList
     TabOrder = 7
-    Text = '---'
+    OnChange = CBSUBCPUOSChange
   end
   object Label3: TLabel
     AnchorSideTop.Control = Label1
@@ -206,6 +187,37 @@ object QFRemoteDebug: TQFRemoteDebug
     Top = 184
     Width = 179
     Caption = 'OS Sub options:'
+  end
+  object Edit1: TEdit
+    AnchorSideTop.Control = CBCPU
+    AnchorSideTop.Side = asrCenter
+    Left = 263
+    Height = 36
+    Hint = '待添加的lib目录名称'
+    Top = 303
+    Width = 212
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 8
+    TextHint = '待添加lib目录名称'
+  end
+  object Button1: TButton
+    AnchorSideTop.Control = Edit1
+    AnchorSideTop.Side = asrCenter
+    Left = 480
+    Height = 50
+    Top = 296
+    Width = 132
+    Caption = '添加目录'
+    TabOrder = 9
+    OnClick = Button1Click
+  end
+  object Label8: TLabel
+    Left = 263
+    Height = 28
+    Top = 271
+    Width = 197
+    Caption = '待添加lib目录名称'
   end
   object RtcHttpClient1: TRtcHttpClient
     MultiThreaded = True

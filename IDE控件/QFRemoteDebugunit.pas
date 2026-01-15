@@ -22,7 +22,6 @@ type
   { TQFRemoteDebug }
 
   TQFRemoteDebug = class(TForm)
-    btnUpdateLibrary: TButton;
     BtSaveConfig: TButton;
     CBOS: TComboBox;
     CBCPU: TComboBox;
@@ -35,15 +34,12 @@ type
     Label5: TLabel;
     eServerAddr: TEdit;
     btnRemoteDebug: TButton;
-    Label6: TLabel;
-    Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
     RtcHttpClient1: TRtcHttpClient;
     RtcDataRequest1: TRtcDataRequest;
     pInfo: TPanel;
     procedure btnConnectClick(Sender: TObject);
-    procedure btnUpdateLibraryClick(Sender: TObject);
     procedure BtSaveConfigClick(Sender: TObject);
     procedure CBOSChange(Sender: TObject);
     procedure eServerAddrExit(Sender: TObject);
@@ -57,15 +53,11 @@ type
     procedure RtcDataRequest1DataSent(Sender: TRtcConnection);
     procedure RtcDataRequest1DataReceived(Sender: TRtcConnection);
     procedure SetProjectConfig;
-    procedure DownLibFiles(i:int64);
-    procedure fixLib(CrossPaths:String);
     procedure GetCrossLibList;
     procedure ModifyFpccfg;
     function GetlibVer:String;
  private
     { Private declarations }
-    LibFileList:TStringList;
-    Nextno:Int64;
     TargetCPUOS:String;
     eRequestFileName:String;
     eLocalFileName:String;
@@ -243,39 +235,6 @@ begin
   end;
 end;
 
-procedure TQFRemoteDebug.btnUpdateLibraryClick(Sender: TObject);
-begin
-  if MessageDlg('更新交叉编译lib','确定要更新交叉编译'+CBSUBCPUOS.Text+'lib文件？',mtConfirmation,mbYesNo,'')=mrYes then
-  begin
-    BtSaveConfigClick(Self);
-    TargetCPUOS:=CBSUBCPUOS.Text;
-    if pos('win',TargetCPUOS)<=0 then
-    begin
-      if btnUpdateLibrary.Caption= 'Downloading ...' then
-      begin
-        btnUpdateLibrary.Caption:='update Cross Library : '+TargetCPUOS;
-        IsDownLibFile:=False;
-      end
-      else
-        IsDownLibFile:=True;
-      btnUpdateLibrary.Enabled:=False;
-      if not RtcHttpClient1.isConnecting then
-        btnConnectClick(Self);
-      DeleteFile(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+ '\liblist.txt'));
-      with RtcDataRequest1 do
-      begin
-        Request.Info.AsString['request_type'] :='downloadliblist';
-        Request.Method := 'GET';
-        Request.FileName := '/DOWNLOADLIBLIST';
-        Post;
-      end;
-      btnUpdateLibrary.Enabled:=True;
-    end
-    else
-      ShowMessage('windows程序不需要更新lib文件！');
-  end;
-end;
-
 procedure TQFRemoteDebug.BtSaveConfigClick(Sender: TObject);
 var
   Config: TConfigStorage;
@@ -288,13 +247,12 @@ begin
   if Config.GetValue('ProjectOptions/Version/Value','')<>'' then
   begin
     TargetCPU:=CBCPU.Items[CBCPU.ItemIndex];
-    TargetOS:=CBOS.Items[CBOS.ItemIndex];//'linux';
+    TargetOS:=CBOS.Items[CBOS.ItemIndex];
 
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetCPU:=TargetCPU;
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetOS:=TargetOS;
 
-    //TargetCPUOS:=TargetCPU+'-'+TargetOS;
-    TargetCPUOS:=CBSUBCPUOS.Text;
+    TargetCPUOS:=TargetCPU+'-'+TargetOS;
 
     eGDBFileName := StringReplace(LazarusIDE.GetPrimaryConfigPath,'config_lazarus','fpcbootstrap',[]);
 
@@ -316,7 +274,6 @@ begin
     Config.SetValue('CompilerOptions/CodeGeneration/TargetOS/Value',TargetOS);
     LazarusIDE.DoSaveAll([sfProjectSaving]);  //保存
     Config.Free;
-    btnUpdateLibrary.Caption:='update Cross Library : '+TargetCPUOS;
   end
   else
   begin
@@ -429,11 +386,8 @@ begin
   CBCPU.Text:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetCPU;
   CBOS.Text:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetOS;
   if CBOS.ItemIndex<0 then CBOS.ItemIndex:=0;
-  btnUpdateLibrary.Caption:='update Cross Library : '+TargetCPUOS;
   Label8.Caption:='Current Project Targget CPU / OS:';
   Label9.Caption:= TargetCPUOS;
-  Label6.Caption:= '';
-  Label7.Caption:='';
   GetCrossLibList;
 end;
 
@@ -495,7 +449,9 @@ begin
         Post;
       end;
       LazarusIDE.DoRunProject;//运行要debug的project
-    end;
+    end
+    else
+      close;
     btnRemoteDebug.Enabled:=True;
   end
   else
@@ -529,26 +485,6 @@ begin
       Request.FileName := '/DOWNLOAD';
       Request.Host := ServerAddr;
        WriteHeader;
-    end
-    else
-    if Request.Info.AsString['request_type'] = 'downloadliblist' then
-    begin
-      // 下载请求
-      DeleteFile(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+'\liblist.txt'));
-      crosspath:=LazarusIDE.GetPrimaryConfigPath;
-      crosspath:=crosspath.Replace('config_lazarus','',[]);
-      crosspath:=SetDirSeparators(crosspath+'cross\lib\'+TargetCPUOS+'\');
-      if DirectoryExists(crosspath) then
-      begin
-        DeleteDirectory(crosspath,False);
-      end;
-      ForceDirectories(crosspath);
-      btnUpdateLibrary.Caption := 'Downloading ...';
-      Request.Method := 'GET';
-      Request.FileName := '/DOWNLOADLIBLIST';
-      Request.Host := ServerAddr;
-      Request.Query['file'] := 'liblist.txt';
-      WriteHeader;
     end;
   end;
 end;
@@ -588,77 +524,6 @@ begin
   end;
 end;
 
-procedure TQFRemoteDebug.DownLibFiles(i:int64);
-var
-  files,path:String;
-begin
-  files:='///'+CBCPU.Text+'-'+CBOS.Text+'/'+LibFileList.ValueFromIndex[i];
-  //files:='///'+TargetCPUOS+'/'+LibFileList.ValueFromIndex[i];
-  Label6.Caption:=IntToStr(i+1)+' / '+inttostr(LibFileList.Count) ;
-  Label7.Caption:=LibFileList.ValueFromIndex[i];
-  path:=LazarusIDE.GetPrimaryConfigPath;
-  path:=path.Replace('config_lazarus','',[]);
-  path:=SetDirSeparators(path+'cross\lib\'+TargetCPUOS+'\');
-  if not DirectoryExists(path) then
-      ForceDirectories(path);
-  DeleteFile(path+LibFileList.ValueFromIndex[i]);
-  with RtcDataRequest1 do
-  begin
-    Request.Info.AsString['request_type'] :='download';
-    Request.Method := 'GET';
-    Request.FileName := '/DOWNLOAD';
-    Request.Query['file'] :=URL_Encode(Utf8Encode(files));
-    Request.Info.asText['file'] := LibFileList.ValueFromIndex[i];
-    Post;
-  end;
-end;
-
-procedure TQFRemoteDebug.fixLib(CrossPaths:String);
-const
-  libs:array[1..7] of shortstring =(
-  'libgdk-x11-2.0.so',
-  'libgtk-x11-2.0.so',
-  'libX11.so',
-  'libgdk_pixbuf-2.0.so',
-  'libpango-1.0.so',
-  'libcairo.so',
-  'libatk-1.0.so'
-  );
-var
-  i:Integer;
-
-  procedure cpf(p,f:String);
-  var
-    FileList : TStringList;
-    SourceFile:String;
-    TargetFile:String;
-    i:Integer;
-  begin
-    try
-      FileList := TStringList.Create;
-      FindAllFiles(FileList, p, f+'*', False);
-
-      for i := 0 to FileList.Count - 1 do
-      begin
-        CopyFile(FileList[i],p+f,
-         [cffOverwriteFile, cffCreateDestDirectory,cffPreserveTime]);
-        Break;
-      end;
-    finally
-      FileList.Free;
-    end;
-  end;
-
-begin
-  for i:=1 to 7 do
-  begin
-    if not FileExists(CrossPaths+libs[i]) then
-    begin
-       cpf(CrossPaths,libs[i]);
-    end;
-  end;
-end;
-
 procedure TQFRemoteDebug.RtcDataRequest1DataReceived(Sender: TRtcConnection);
 var
   s: RtcString;
@@ -669,66 +534,17 @@ begin
   begin
     requestType := Request.Info.AsString['request_type'];
 
-    if requestType = 'downloadliblist' then
-    begin
-      // 读取数据并保存到文件
-      s := Read;
-      FDownloadFileName:=SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+'\liblist.txt');
-      Write_File(FDownloadFileName, s, Request.ContentIn -length(s));
-
-      if Response.Done then
-      begin
-        // 下载完成
-        LibFileList:=TStringList.Create;
-        LibFileList.LoadFromFile(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+'\liblist.txt'));
-        Nextno:=0;
-        DownLibFiles(Nextno);
-      end;
-    end
-    else
     if requestType = 'download' then
     begin
       // 读取数据并保存到文件
       s := Read;
-      if LibFileList<>nil then
-      begin
-        FDownloadFileName:=LazarusIDE.GetPrimaryConfigPath;
-        FDownloadFileName:=FDownloadFileName.Replace('config_lazarus','',[]);
-        FDownloadFileName:=FDownloadFileName+'cross\lib\'+TargetCPUOS+'\'+
-        Request.Info.asText['file'];
-      end
-      else
-      begin
-        FDownloadFileName:='download\'+Request.Info.asText['file'];
-      end;
+      FDownloadFileName:='download\'+Request.Info.asText['file'];
       Write_File(FDownloadFileName, s, Request.ContentIn -length(s));
 
       if Response.Done then
       begin
         // 下载完成
         pInfo.Caption := 'Download Complete';
-        if LibFileList<>nil then
-        begin
-          if (Nextno<LibFileList.Count-1) and (IsDownLibFile) then
-          begin
-            Nextno:=Nextno+1;
-            DownLibFiles(Nextno);
-          end
-          else
-          begin
-            IsDownLibFile:=False;
-            btnUpdateLibrary.Caption:='update Cross Library : '+TargetCPUOS;
-            pInfo.Caption:='update Cross Library Done！';
-            Label7.Caption:='';
-            LibFileList.Free;
-            FDownloadFileName:=LazarusIDE.GetPrimaryConfigPath;
-            FDownloadFileName:=FDownloadFileName.Replace('config_lazarus','',[]);
-            FDownloadFileName:=FDownloadFileName+'cross\lib\'+TargetCPUOS+'\';
-            //修正更新后可能出现缺少libgdk-x11-2.0.so等7个关键文件的问题
-            //这7个so文件是编译GTK2应用不可缺少的文件
-            fixLib(FDownloadFileName);
-          End;
-        end;
       end;
     end
     else if requestType = 'debug' then

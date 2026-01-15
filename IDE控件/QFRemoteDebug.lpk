@@ -29,6 +29,11 @@
         <HasRegisterProc Value="True"/>
         <UnitName Value="QFCompilerRununit"/>
       </Item>
+      <Item>
+        <Filename Value="QFRemoteUpdateCrossLibunit.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="QFRemoteUpdateCrossLibunit"/>
+      </Item>
     </Files>
     <RequiredPkgs>
       <Item>
