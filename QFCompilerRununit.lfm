@@ -1,0 +1,201 @@
+object QFCompilerRun: TQFCompilerRun
+  Left = 309
+  Height = 499
+  Top = 203
+  Width = 672
+  ActiveControl = btnRemoteDebug
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsDialog
+  Caption = 'Compiler / Run Tool'
+  ClientHeight = 499
+  ClientWidth = 672
+  Color = clBtnFace
+  DesignTimePPI = 192
+  Font.CharSet = ANSI_CHARSET
+  Font.Color = clBlack
+  Font.Height = -24
+  Font.Name = 'Century'
+  Font.Pitch = fpVariable
+  Font.Quality = fqDraft
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  object btnRemoteDebug: TButton
+    AnchorSideTop.Control = Edit1
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 67
+    Hint = '编译当前project及运行当前projec'
+    Top = 298
+    Width = 638
+    BorderSpacing.Top = 20
+    Caption = 'Compiler / Run'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 0
+    OnClick = btnRemoteDebugClick
+  end
+  object pInfo: TPanel
+    Left = 0
+    Height = 43
+    Top = 456
+    Width = 672
+    Align = alBottom
+    BevelOuter = bvLowered
+    ParentBackground = False
+    TabOrder = 1
+  end
+  object CBOS: TComboBox
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 36
+    Top = 64
+    Width = 232
+    BorderSpacing.Top = 5
+    ItemHeight = 28
+    ItemIndex = 0
+    Items.Strings = (
+      'linux'
+      'win64'
+      'win32'
+    )
+    Style = csDropDownList
+    TabOrder = 2
+    Text = 'linux'
+    OnChange = CBCPUChange
+  end
+  object Label1: TLabel
+    Left = 16
+    Height = 28
+    Top = 31
+    Width = 41
+    Caption = 'OS:'
+  end
+  object Label2: TLabel
+    AnchorSideTop.Control = CBOS
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 28
+    Top = 120
+    Width = 77
+    BorderSpacing.Top = 20
+    Caption = 'CPU：'
+  end
+  object CBCPU: TComboBox
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 36
+    Top = 153
+    Width = 232
+    BorderSpacing.Top = 5
+    ItemHeight = 28
+    ItemIndex = 0
+    Items.Strings = (
+      'aarch64'
+      'x86_64'
+      'i386'
+      'arm'
+      'loongarch64'
+      'riscv64'
+    )
+    Style = csDropDownList
+    TabOrder = 3
+    Text = 'aarch64'
+    OnChange = CBCPUChange
+  end
+  object BtSaveConfig: TButton
+    AnchorSideTop.Control = CBCPU
+    AnchorSideTop.Side = asrCenter
+    Left = 464
+    Height = 40
+    Top = 197
+    Width = 135
+    Anchors = [akLeft]
+    Caption = '修改CPU'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -24
+    Font.Name = 'Century'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
+    TabOrder = 4
+    Visible = False
+    OnClick = BtSaveConfigClick
+  end
+  object Label3: TLabel
+    AnchorSideTop.Control = Label1
+    Left = 280
+    Height = 28
+    Top = 31
+    Width = 179
+    Caption = 'OS Sub options:'
+  end
+  object CBSUBCPUOS: TComboBox
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrBottom
+    Left = 286
+    Height = 36
+    Top = 64
+    Width = 368
+    BorderSpacing.Top = 5
+    ItemHeight = 28
+    Style = csDropDownList
+    TabOrder = 5
+    OnChange = CBSUBCPUOSChange
+  end
+  object Label4: TLabel
+    AnchorSideTop.Control = CBCPU
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 28
+    Top = 209
+    Width = 191
+    BorderSpacing.Top = 20
+    Caption = 'TargetFileName:'
+  end
+  object Edit1: TEdit
+    AnchorSideTop.Control = Label4
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 36
+    Top = 242
+    Width = 638
+    BorderSpacing.Top = 5
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 6
+    OnMouseEnter = Edit1MouseEnter
+  end
+  object Label5: TLabel
+    AnchorSideTop.Control = CBSUBCPUOS
+    AnchorSideTop.Side = asrBottom
+    Left = 280
+    Height = 28
+    Top = 120
+    Width = 137
+    BorderSpacing.Top = 20
+    Caption = 'Build Mode:'
+  end
+  object ComboBox1: TComboBox
+    AnchorSideTop.Control = Label5
+    AnchorSideTop.Side = asrBottom
+    Left = 286
+    Height = 36
+    Top = 153
+    Width = 368
+    BorderSpacing.Top = 5
+    ItemHeight = 28
+    ItemIndex = 0
+    Items.Strings = (
+      'debug'
+      'release'
+    )
+    Style = csDropDownList
+    TabOrder = 7
+    Text = 'debug'
+  end
+end
