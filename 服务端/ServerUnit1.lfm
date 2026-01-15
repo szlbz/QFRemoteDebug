@@ -75,6 +75,7 @@ object Form2: TForm2
     Caption = 'Label2'
   end
   object RtcHttpServer1: TRtcHttpServer
+    MultiThreaded = True
     OnConnect = RtcHttpServer1Connect
     OnListenStart = RtcHttpServer1ListenStart
     OnListenStop = RtcHttpServer1ListenStop

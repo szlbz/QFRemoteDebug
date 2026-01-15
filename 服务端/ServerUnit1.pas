@@ -55,6 +55,7 @@ type
     LibFileList:TStringList;
     {$ifdef linux}
     procedure CopyLib;
+    procedure CopyLibAllFiles;
     {$endif}
   public
     { Public declarations }
@@ -62,6 +63,7 @@ type
 
 var
   Form2: TForm2;
+  FileList: TStringList;
 
 implementation
 
@@ -265,7 +267,71 @@ begin
 end;
 {$endif}
 
+function ExecCmd(ACmd, Param1, Param2, Param3, Param4: string; AResult: Tstrings): Boolean;
+var
+  theProcess: TProcess;
+  sTmp: TStrings;
+begin
+  Result := False;
+  if  AResult <> nil then
+    AResult.Clear;
+  theProcess := TProcess.Create(nil);
+  theProcess.Executable := ACmd;
+  if Param1 <> '' then
+  theProcess.Parameters.Add(Param1);
+  if Param2 <> '' then
+  theProcess.Parameters.Add(Param2);
+  if Param3 <> '' then
+    theProcess.Parameters.Add(Param3);
+  if Param4 <> '' then
+    theProcess.Parameters.Add(Param4);
+  theProcess.Options := theProcess.Options + [poUsePipes];
+  sTmp := TStringList.Create;
+  theProcess.Execute;
+  repeat
+    Sleep(10);
+    sTmp.Clear;
+    sTmp.LoadFromStream(theProcess.Output);
+    AResult.AddStrings(sTmp);
+  until not theProcess.Running;
+  sTmp.LoadFromStream(theProcess.Output);
+  AResult.AddStrings(sTmp);
+  sTmp.Free;
+  theProcess.WaitOnExit;
+
+  if theProcess.ProcessID > 4 then
+    Result := True;
+  theProcess.Free;
+  theProcess := nil;
+end;
+
 {$ifdef linux}
+procedure listLibfile;
+var
+  Process : TProcess;
+  sResult:TStringList;
+  str:String;
+  i:Integer;
+begin
+  try
+    sResult:=TStringList.Create;
+    ExecCmd('ldconfig', '--print-cache','','','',sResult);
+    if sResult.Count > 0 then
+    begin
+      FileList:=TStringList.Create;
+      for i:=0 to sResult.Count-1 do
+      begin
+        str:=sResult[i];
+        str:=Copy(str,pos(') => ',str)+5,Length(str));
+        if pos(') => ',sResult[i])>0 then
+          FileList.Add(str);
+      end;
+    end;
+  finally
+    sResult.Free;
+  end;
+end;
+
 procedure TForm2.CopyLib;
 var
   s,s1,s2,s3,str,fn,n1,n2,ldlinux:String;
@@ -277,6 +343,205 @@ var
   SourceFile:String;
   TargetFile:String;
   Info: Stat;
+  aoFileList:TStringList;
+  Process : TProcess;
+
+  i,j,k,y: Integer;
+
+  function ISLinkFile(fn:string;out RealFile:String):Boolean;
+  begin
+    Result:=False;
+    RealFile:=fn;
+    if fpLStat(fn, Info) = 0 then
+    begin
+      if fpS_ISLNK(Info.st_mode) then // 使用 fpS_ISLNK 宏判断是否为符号链接
+      begin
+        Result:=True;
+        RealFile:= fpReadLink(fn) ;
+      end;
+    end;
+  end;
+begin
+  listLibfile;
+
+  Panel1.Caption:=('开始拷贝lib文件到当前目录（'+LowerCase({$I %FPCTARGETCPU%})+'-'+LowerCase({$I %FPCTARGETOS%})+'）...');
+  {$if defined(CPU32) and defined(CPUARM)}
+  SourceFile:='/usr/lib/arm-linux-gnueabihf';
+  {$else}
+  SourceFile:='/usr/lib/'+LowerCase({$I %FPCTARGETCPU%})+'-'+LowerCase({$I %FPCTARGETOS%})+'-gnu';
+  {$endif}
+  TargetFile:=''+LowerCase({$I %FPCTARGETCPU%})+'-'+LowerCase({$I %FPCTARGETOS%});
+  if not DirectoryExists(TargetFile) then
+      ForceDirectories(TargetFile);
+  if TargetFile[Length(TargetFile)]<>'/' then
+    TargetFile:=TargetFile+'/';
+  if SourceFile[Length(SourceFile)]<>'/' then
+    SourceFile:=SourceFile+'/';
+  if not FileExists(SourceFile+'libc.so') then
+  begin
+    if not FileExists('/usr/lib/libc.so') then
+      SourceFile:='/usr/lib/'
+    else
+      SourceFile:='';
+  end;
+  if SourceFile='' then
+  begin
+    Panel1.Caption:=('没找到libc.so');
+  end
+  else
+  begin
+    LibFileList:=TStringList.Create;
+    try
+      for i := 0 to FileList.Count - 1 do
+      begin
+        fn:=ExtractFileName(FileList[i]);
+        if ISLinkFile(FileList[i],s) then
+        begin//软连接文件
+          if copy(s,1,1)=SetDirSeparators('/') then
+            n1:=s
+          else
+            n1:=ExtractFilePath(FileList[i])+s;
+          n2:=TargetFile+ExtractFileName(FileList[i]);
+          CopyFile(n1,n2,[cffOverwriteFile, cffCreateDestDirectory,cffPreserveTime]);
+        end
+        else
+          CopyFile(FileList[i],TargetFile+ExtractFileName(FileList[i]),
+             [cffOverwriteFile, cffCreateDestDirectory,cffPreserveTime]);
+        LibFileList.Add(fn);
+        Panel1.Caption:=(IntToStr(i+1)+'/'+IntToStr(FileList.Count));
+      end;
+
+      //拷贝a文件
+      try
+        aoFileList:=TStringList.Create;
+        FindAllFiles(aoFileList, SourceFile, '*.a;*.o', False);
+        for i := 0 to aoFileList.Count - 1 do
+        begin
+          fn:=ExtractFileName(aoFileList[i]);
+          CopyFile(aoFileList[i],TargetFile+ExtractFileName(aoFileList[i]),
+             [cffOverwriteFile, cffCreateDestDirectory,cffPreserveTime]);
+          LibFileList.Add(fn);
+          Panel1.Caption:=(IntToStr(i+1)+'/'+IntToStr(aoFileList.Count));
+        end;
+      finally
+        aoFileList.Free;
+      end;
+      cpu:=StringToCPU({$I %FPCTARGET%});
+      os:=StringToOS({$I %FPCTARGETOS%});
+
+      //从/usr/lib/gcc/xxx-linux-gnu/xx,如：/usr/lib/gcc/x86_64-linux-gnu/15
+      //拷贝以下4个o文件
+      gccpath:= GetDefaultLibGCCDir(cpu,os,s)+'/';
+      if FileExists(gccpath+'crtbeginS.o') then
+      begin
+        LibFileList.Add('crtbeginS.o');
+        CopyFile(gccpath+'crtbeginS.o',TargetFile+'crtbeginS.o',
+           [cffOverwriteFile, cffCreateDestDirectory,cffPreserveTime]);
+      end;
+      if FileExists(gccpath+'crtend.o') then
+      begin
+        LibFileList.Add('crtend.o');
+        CopyFile(gccpath+'crtend.o',TargetFile+'crtend.o',
+           [cffOverwriteFile, cffCreateDestDirectory,cffPreserveTime]);
+      end;
+      if FileExists(gccpath+'crtendS.o') then
+      begin
+        LibFileList.Add('crtendS.o');
+        CopyFile(gccpath+'crtendS.o',TargetFile+'crtendS.o',
+           [cffOverwriteFile, cffCreateDestDirectory,cffPreserveTime]);
+      end;
+      if FileExists(gccpath+'crtbegin.o') then
+      begin
+        LibFileList.Add('crtbegin.o');
+        CopyFile(gccpath+'crtbegin.o',TargetFile+'crtbegin.o',
+           [cffOverwriteFile, cffCreateDestDirectory,cffPreserveTime]);
+      end;
+
+      if FileExists(SourceFile+'libQt5Pas.so.1') then
+      begin
+        LibFileList.Add('libQt5Pas.so');
+        CopyFile(SourceFile+'libQt5Pas.so.1',TargetFile+'libQt5Pas.so',
+           [cffOverwriteFile, cffCreateDestDirectory,cffPreserveTime]);
+      end;
+
+      //修改libc.so文件
+      if FileExists(SourceFile+'libc.so') then
+      begin
+        FileList.LoadFromFile(SourceFile+'libc.so');
+        for i:=0 to  FileList.Count-1 do
+        begin
+          k:=pos('libc.so',FileList[i]);
+          if k>0 then
+          begin
+             s1:='';
+             str:=FileList[i];
+             for j:=k to length(str)-1 do
+             begin
+                if str[j]<>' ' then
+                  s1:=s1+str[j]
+                else
+                  break;
+             end;
+             k:=pos('libc_nonshared.a',FileList[i]);
+             if k>0 then
+               s2:='libc_nonshared.a';
+
+             k:=pos('ld-linux-',FileList[i]);
+             ldlinux:=copy(FileList[i],pos('AS_NEEDED',FileList[i])+10,length(FileList[i]));
+             ldlinux:=ldlinux.Replace(' ','',[rfReplaceAll]);
+             ldlinux:=ldlinux.Replace('(','',[rfReplaceAll]);
+             ldlinux:=ldlinux.Replace(')','',[rfReplaceAll]);
+             CopyFile(ldlinux,TargetFile+ExtractFileName(ldlinux),
+                [cffOverwriteFile, cffCreateDestDirectory,cffPreserveTime]);
+             s3:='';
+             str:=FileList[i];
+             for j:=k to length(str)-1 do
+             begin
+                if str[j]<>' ' then
+                  s3:=s3+str[j]
+                else
+                  break;
+             end;
+          str:='GROUP ( '+s1+' '+s2+'  AS_NEEDED ( '+s3+' ))';
+          FileList[i]:=str;
+          end;
+        end;
+        FileList.SaveToFile(TargetFile+'/libc.so');
+        LibFileList.Add('libc.so');
+        //libc.so修改完成
+        try
+          Process := TProcess.Create(nil);
+          Process.CurrentDirectory := SetDirSeparators(Extractfilepath(Paramstr(0))+TargetFile+'/');
+          Process.Executable := '/bin/sh';
+          Process.Parameters.Add('-c');
+          Process.Parameters.Add('uname -svmro > actual_library_version_info.txt');
+          Process.ShowWindow := swoHIDE;
+          Process.Execute;
+          LibFileList.Add('actual_library_version_info.txt');
+        finally
+          Process.Free;
+        end;
+        Panel1.Caption:=('lib文件拷贝完成');
+      end;
+    finally
+       FileList.Free;
+    end;
+  end;
+end;
+
+procedure TForm2.CopyLibAllFiles;
+var
+  s,s1,s2,s3,str,fn,n1,n2,ldlinux:String;
+  gccpath:string;
+  {$ifdef linux}
+  OS: TOS;
+  CPU: TCPU;
+  {$endif}
+  //lnkfile:TStringList;
+  SourceFile:String;
+  TargetFile:String;
+  Info: Stat;
+  Process : TProcess;
 
   FileList: TStringList;
   i,j,k,y: Integer;
@@ -322,8 +587,6 @@ begin
     LibFileList:=TStringList.Create;
     y:=crt.WhereY;
     FileList := TStringList.Create;
-    //ReadLn;
-    //ClrScr;
     try
       // 获取所有文件
       FindAllFiles(FileList, SourceFile, '*.*', False);
@@ -339,7 +602,13 @@ begin
           else
             n1:=ExtractFilePath(FileList[i])+s;
           n2:=TargetFile+ExtractFileName(FileList[i]);
+          //if not FileExists(ExtractFileName(n1)) then
+          //  CopyFile(n1,TargetFile+ExtractFileName(n1),[cffOverwriteFile, cffCreateDestDirectory,cffPreserveTime]);
           CopyFile(n1,n2,[cffOverwriteFile, cffCreateDestDirectory,cffPreserveTime]);
+          //lnkfile:=TStringList.Create;
+          //lnkfile.Add('GROUP ( '+ExtractFileName(n1+' )'));
+          //lnkfile.SaveToFile(n2);
+          //lnkfile.Free;
         end
         else
           CopyFile(FileList[i],TargetFile+ExtractFileName(s),
@@ -424,6 +693,18 @@ begin
         end;
         FileList.SaveToFile(TargetFile+'/libc.so');
         //libc.so修改完成
+        try
+          Process := TProcess.Create(nil);
+          Process.CurrentDirectory := SetDirSeparators(Extractfilepath(Paramstr(0))+TargetFile+'/');
+          Process.Executable := '/bin/sh';
+          Process.Parameters.Add('-c');
+          Process.Parameters.Add('uname -svmro > 0libraryVersionInfo.txt');
+          Process.ShowWindow := swoHIDE;
+          Process.Execute;
+          LibFileList.Add('0libraryVersionInfo.txt');
+        finally
+          Process.Free;
+        end;
         Panel1.Caption:=('lib文件拷贝完成');
       end;
     finally
@@ -495,19 +776,19 @@ end;
 
 procedure TForm2.RtcHttpServer1ListenStart(Sender: TRtcConnection);
 begin
-  with TRtcDataServer(Sender) do
-    if not inMainThread then
-      Sync(@RtcHttpServer1ListenStart)
-    else
+  //with TRtcDataServer(Sender) do
+  //  if not inMainThread then
+  //    Sync(@RtcHttpServer1ListenStart)
+  //  else
       btnListen.Caption := 'Stop Listen';
 end;
 
 procedure TForm2.RtcHttpServer1ListenStop(Sender: TRtcConnection);
 begin
-  with TRtcDataServer(Sender) do
-    if not inMainThread then
-      Sync(@RtcHttpServer1ListenStop)
-    else
+  //with TRtcDataServer(Sender) do
+  //  if not inMainThread then
+  //    Sync(@RtcHttpServer1ListenStop)
+  //  else
       btnListen.Caption := 'Listen';
 end;
 
@@ -791,6 +1072,7 @@ var
   bytesSent: int64;
   bytesToSend: int64;
   bufferSize: integer;
+  percent: Integer;
 begin
   with TRtcDataServer(Sender) do
   begin
@@ -801,6 +1083,21 @@ begin
       fileName := Request.Info.asText['file'];
       fileSize := Request.Info.asLargeInt['file_size'];
       bytesSent := Request.Info.asLargeInt['bytes_sent'];
+
+      // 计算当前进度百分比
+      percent := (bytesSent * 100) div fileSize;
+
+      // 只在整十百分比（10%, 20%, ... 100%）时显示进度
+      if (percent mod 10 = 0) and (percent > Request.Info.asInteger['last_reported_percent']) then
+      begin
+        Request.Info.asInteger['last_reported_percent'] := percent;
+        Panel1.Caption:= '在下载:'+Format('%s: %d%% (%.1f/%.1f MB)', [
+          ExtractFileName(fileName),
+          percent,
+          bytesSent / 1024 / 1024,
+          fileSize / 1024 / 1024
+        ]);
+      end;
 
       // 如果还有数据需要发送
       if bytesSent < fileSize then
@@ -823,6 +1120,11 @@ begin
       if Request.Info.asLargeInt['bytes_sent'] >= fileSize then
       begin
         // 文件发送完成
+        // 显示完成信息
+        Panel1.Caption:=(Format('%s: 下载完成 (%.1f MB)', [
+          ExtractFileName(fileName),
+          fileSize / 1024 / 1024
+        ]));
         Request.Info.AsString['request_type'] := '';  // 清除请求类型
         Panel1.Caption:= Label2.Caption;
       end;

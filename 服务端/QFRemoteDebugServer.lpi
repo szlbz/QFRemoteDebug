@@ -50,7 +50,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="QFRemoteDebugServer-$(TargetCPU)-$(TargetOS)"/>
+      <Filename Value="QFRemoteDebugServer_$(TargetCPU)-$(TargetOS)-ubuntu24"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
@@ -67,6 +67,7 @@
     </CodeGeneration>
     <Linking>
       <Debugging>
+        <GenerateDebugInfo Value="False"/>
         <DebugInfoType Value="dsDwarf3"/>
       </Debugging>
       <Options>
