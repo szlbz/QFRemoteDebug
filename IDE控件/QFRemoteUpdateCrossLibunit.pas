@@ -23,7 +23,6 @@ type
 
   TQFRemoteUpdateCrossLib = class(TForm)
     btnUpdateLibrary: TButton;
-    BtSaveConfig: TButton;
     Button1: TButton;
     CBOS: TComboBox;
     CBCPU: TComboBox;
@@ -116,7 +115,7 @@ var
   MenuCommand: TIDEMenuCommand;
 begin
   // register shortcut and menu item
-  MenuItemCaption:='Update Cross Lib Assistant';// <- this caption should be replaced by a resourcestring
+  MenuItemCaption:='QFUpdate Cross Lib Assistant';// <- this caption should be replaced by a resourcestring
   // search shortcut category
   CmdCatToolMenu:=IDECommandList.FindCategoryByName(CommandCategoryCustomName);//CommandCategoryToolMenuName);
   // register shortcut
@@ -452,6 +451,41 @@ const
 var
   i:Integer;
 
+
+  function Getld_linux_File(path: string):String;
+  var
+    FileInfo: TSearchRec;
+  begin
+    Result:='';
+    if FindFirst(path + 'ld-linux*', faAnyFile, FileInfo) = 0 then
+    begin
+      Result:= ExtractFileName(FileInfo.Name);
+    end;
+    FindClose(FileInfo);  // 确保释放搜索资源
+  end;
+
+  //修正编译so时链接缺少ld的Bug
+  procedure cpld;
+  var
+    ldlinuxfile:String;
+  begin
+    ldlinuxfile:=Getld_linux_File(CrossPaths);
+    if ldlinuxfile<>'' then
+    begin
+      if not DirectoryExists(CrossPaths+'lib') then
+      begin
+        ForceDirectories(CrossPaths+'lib');
+        CopyFile(CrossPaths+ldlinuxfile,CrossPaths+'lib/'+ldlinuxfile,[cffOverwriteFile,cffPreserveTime,cffCreateDestDirectory]);
+      end;
+      if pos('64',CrossPaths)>0 then
+      begin
+        if not DirectoryExists(CrossPaths+'lib64') then
+            ForceDirectories(CrossPaths+'lib64');
+        CopyFile(CrossPaths+ldlinuxfile,CrossPaths+'lib64/'+ldlinuxfile,[cffOverwriteFile,cffPreserveTime,cffCreateDestDirectory]);
+      end;
+    end;
+  end;
+
   procedure cpf(p,f:String);
   var
     FileList : TStringList;
@@ -475,6 +509,8 @@ var
   end;
 
 begin
+  cpld;
+
   for i:=1 to 7 do
   begin
     if not FileExists(CrossPaths+libs[i]) then

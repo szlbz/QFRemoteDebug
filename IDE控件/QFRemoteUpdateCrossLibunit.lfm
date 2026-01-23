@@ -148,25 +148,6 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     Text = 'aarch64'
     OnChange = CBOSChange
   end
-  object BtSaveConfig: TButton
-    AnchorSideTop.Control = CBCPU
-    AnchorSideTop.Side = asrCenter
-    Left = 32
-    Height = 50
-    Top = 344
-    Width = 135
-    Anchors = [akLeft]
-    Caption = '修改CPU'
-    Font.CharSet = ANSI_CHARSET
-    Font.Color = clBlack
-    Font.Height = -24
-    Font.Name = 'Century'
-    Font.Pitch = fpVariable
-    Font.Quality = fqDraft
-    ParentFont = False
-    TabOrder = 6
-    Visible = False
-  end
   object CBSUBCPUOS: TComboBox
     AnchorSideTop.Control = Label3
     AnchorSideTop.Side = asrBottom
@@ -177,7 +158,7 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     BorderSpacing.Top = 5
     ItemHeight = 28
     Style = csDropDownList
-    TabOrder = 7
+    TabOrder = 6
     OnChange = CBSUBCPUOSChange
   end
   object Label3: TLabel
@@ -198,7 +179,7 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     Width = 212
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 8
+    TabOrder = 7
     TextHint = '待添加lib目录名称'
   end
   object Button1: TButton
@@ -209,7 +190,7 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     Top = 296
     Width = 132
     Caption = '添加目录'
-    TabOrder = 9
+    TabOrder = 8
     OnClick = Button1Click
   end
   object Label8: TLabel

@@ -37,6 +37,9 @@
     </Files>
     <RequiredPkgs>
       <Item>
+        <PackageName Value="SynEditDsgn"/>
+      </Item>
+      <Item>
         <PackageName Value="IdeDebugger"/>
       </Item>
       <Item>
