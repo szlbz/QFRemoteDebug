@@ -250,6 +250,8 @@ begin
     TargetCPU:=CBCPU.Items[CBCPU.ItemIndex];
     TargetOS:=CBOS.Items[CBOS.ItemIndex];;
 
+    CBSUBCPUOSChange(self);
+
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetCPU:=TargetCPU;
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetOS:=TargetOS;
     LazarusIDE.ActiveProject.LazCompilerOptions.TargetFilename:=Edit1.Text;
@@ -266,6 +268,7 @@ begin
     Config.DeletePath('ProjectOptions/Debugger');
     Config.SetValue('CompilerOptions/CodeGeneration/TargetCPU/Value',TargetCPU);
     Config.SetValue('CompilerOptions/CodeGeneration/TargetOS/Value',TargetOS);
+    Config.SetValue('CompilerOptions/Target/Filename/Value',Edit1.Text);
     LazarusIDE.DoSaveAll([sfProjectSaving]);  //保存
     Config.Free;
   end
