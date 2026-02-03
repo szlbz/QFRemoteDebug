@@ -31,6 +31,7 @@ type
     CBSUBCPUOS: TComboBox;
     ComboBox1: TComboBox;
     Edit1: TEdit;
+    CompilerSpecificversionBtn: TButton;
     Label1: TLabel;
     Label2: TLabel;
     btnRemoteDebug: TButton;
@@ -39,6 +40,7 @@ type
     Label5: TLabel;
     pInfo: TPanel;
     Memo1: TSynEdit;
+    procedure CompilerSpecificversionBtnClick(Sender: TObject);
     procedure SaveProjectConfig;
     procedure FastCompilerBtnClick(Sender: TObject);
     procedure CBCPUChange(Sender: TObject);
@@ -78,6 +80,7 @@ procedure Register;
 implementation
 
 {$R *.lfm}
+{$i tools.inc}
 
 //dock windows用
 procedure CreateTQFCompilerRun(Sender: TObject; aFormName: string;
@@ -138,14 +141,14 @@ begin
   Result:='';
   p:=LazarusIDE.GetPrimaryConfigPath;
   p:=p.Replace('config_lazarus','',[]);
-  p:=SetDirSeparators(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
+  p:=SetDirSeparatorsEx(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
   try
     f:=TStringList.Create;
     f.LoadFromFile(p);
     for i:=0 to f.Count-1 do
     begin
-      str:=SetDirSeparators('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text);
-      if pos(str,SetDirSeparators(f[i]))>0 then
+      str:=SetDirSeparatorsEx('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text);
+      if pos(str,SetDirSeparatorsEx(f[i]))>0 then
       begin
         Result:=Copy(f[i],pos(CBCPU.Text+'-'+CBOS.Text,f[i]),Length(f[i]));
         Break;
@@ -164,13 +167,13 @@ var
 begin
   p:=LazarusIDE.GetPrimaryConfigPath;
   p:=p.Replace('config_lazarus','',[]);
-  p:=SetDirSeparators(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
+  p:=SetDirSeparatorsEx(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
   try
     f:=TStringList.Create;
     f.LoadFromFile(p);
     for i:=0 to f.Count-1 do
     begin
-      if pos(SetDirSeparators('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text), f[i])>0 then
+      if pos(SetDirSeparatorsEx('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text), f[i])>0 then
       begin
         s:=Copy(f[i],1,pos(CBCPU.Text+'-'+CBOS.Text,f[i])-1);
         f[i]:=s+CBSUBCPUOS.Text;
@@ -198,7 +201,7 @@ var
   i:Integer;
   libdir,s:String;
   Config: TConfigStorage;
-  GenerateDebugInfo:String;
+  GenerateDebugInfo,crossdir:String;
 begin
   try
     Config:=GetIDEConfigStorage(LazarusIDE.ActiveProject.ProjectInfoFile,true);
@@ -214,13 +217,16 @@ begin
      Config.Free;
   end;
 
-  crosspath:=LazarusIDE.GetPrimaryConfigPath;
-  crosspath:=crosspath.Replace('config_lazarus','',[]);
-  crosspath:=SetDirSeparators(crosspath+'cross\lib\');
+  crossdir:=LazarusIDE.GetPrimaryConfigPath;
+  crossdir:=crossdir.Replace('config_lazarus','',[]);
+  crossdir:=crossdir+'cross/lib/';
+  crossdir:=SetDirSeparatorsEx(crossdir);
+  crosspath:=crossdir;
   try
     CBSUBCPUOS.Items.Clear;
     LibDirList:=TStringList.Create;
-    LibDirList:=FindAllDirectories(crosspath, False);
+
+    LibDirList:=FindAllDirectories(crossdir, False);
     libdir:=CBCPU.Text+'-'+CBOS.Text;
     for i := 0 to LibDirList.Count - 1 do
     begin
@@ -260,9 +266,9 @@ begin
 
     eGDBFileName := StringReplace(LazarusIDE.GetPrimaryConfigPath,'config_lazarus','fpcbootstrap',[]);
 
-    if SetDirSeparators(eGDBFileName[Length(eGDBFileName)])<>SetDirSeparators('/') then
-      eGDBFileName:=eGDBFileName+SetDirSeparators('/');
-    eGDBFileName:=SetDirSeparators(eGDBFileName+GetCompiledTargetCPU+'-'+GetCompiledTargetOS+
+    if SetDirSeparatorsEx(eGDBFileName[Length(eGDBFileName)])<>SetDirSeparatorsEx('/') then
+      eGDBFileName:=eGDBFileName+SetDirSeparatorsEx('/');
+    eGDBFileName:=SetDirSeparatorsEx(eGDBFileName+GetCompiledTargetCPU+'-'+GetCompiledTargetOS+
       '/gdb/'+TargetCPUOS+'/gdb'{$ifdef windows}+'.exe'{$endif});
 
     Config.DeletePath('ProjectOptions/Debugger');
@@ -276,6 +282,138 @@ begin
   begin
     ShowMessage('新建project，先保存project再使用。');
     btnRemoteDebug.Enabled:=False;
+  end;
+end;
+
+procedure TQFCompilerRun.CompilerSpecificversionBtnClick(Sender: TObject);
+var
+  s,cmd:String;
+  Path,path2:TStringList;
+  i:Integer;
+  cpu,os:String;
+  Process : TProcess;
+  ProjectDirectory:String;
+  RunInfo:TStringList;
+  fpcpath:String;
+  crossdir:String;
+  TargetFilename:String;
+begin
+  crossdir:=StringReplace(LazarusIDE.GetPrimaryConfigPath,'config_lazarus','',[]);
+  crossdir:=SetDirSeparatorsEx(crossdir+'cross/lib/');
+  //SaveProjectConfig;
+  //ModifyFpccfg;
+  s:=GetCompilerOpts;
+  if combobox1.ItemIndex=0 then
+  begin
+    s:=s.Replace('-g -gl','',[]);
+    s:=s+' -g -gl'; //debug
+  end
+  else
+     s:=s.Replace('-g -gl','',[]); //release
+  s:=s+' -k-rpath -k'+crossdir+CBSUBCPUOS.Text+' -k-L -k'+crossdir+CBSUBCPUOS.Text;
+  cmd:=s;
+  ProjectDirectory:='';
+  try
+    Path:=TStringList.Create;
+    Path2:=TStringList.Create;
+    Path.Delimiter:=' ';
+    Path.DelimitedText:=s;
+    fpcpath:=Path[0];
+    for i:=0 to Path.Count-1 do
+    begin
+      if copy(Path[i],1,3)='-Fi' then //project或控件lib目录
+      begin
+        s:=path[i].Replace('-Fi','',[]);
+        path2.Add(s);
+      end;
+      if copy(Path[i],1,2)='-o' then //project或控件lib目录
+      begin
+        path[i]:=path[i].Replace('-o','',[]);
+        path[i]:=SetDirSeparatorsEx(ExtractFileDir(path[i])+'/');
+        TargetFilename:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetFilename;
+        if pos('_$(TargetCPU)', TargetFilename)>0 then
+           TargetFilename:=Copy(TargetFilename ,1,pos('_$(TargetCPU)', TargetFilename)-1);
+        if CBSUBCPUOS.Text<>'' then
+          path[i]:='-o'+path[i]+TargetFilename+'_'+CBSUBCPUOS.Text
+        else
+          path[i]:='-o'+path[i]+TargetFilename;
+      end;
+    end;
+    cmd:=path.Text;
+    if path2.Count>0 then
+    begin
+      for i:=0 to path2.Count-1 do
+      begin
+        if not DirectoryExists(path2[i]) then
+          ForceDirectories(path2[i]);
+      end;
+    end;
+  finally
+    Path.Free;
+    path2.Free;
+  end;
+
+  try
+    ProjectDirectory:=ExtractFilePath(LazarusIDE.ActiveProject.ProjectInfoFile);
+    Process := TProcess.Create(nil);
+    Process.CurrentDirectory:=ProjectDirectory;
+    {$ifdef windows}
+    Process.Executable := 'cmd';
+    Process.Parameters.Add('/c');
+    Process.Parameters.Add(cmd);
+    Memo1.Text:=cmd;
+    {$else}
+    Path.Delimiter:=' ';
+    Path.DelimitedText:=cmd;
+    Process.Executable := Path[0];
+    for i:=1 to Path.Count-1 do
+    begin
+      if Path[i]<>'' then
+        Process.Parameters.Add(Path[i]);
+    end;
+    Memo1.Text:=cmd;
+    {$endif}
+
+    // 执行命令
+    Process.Options := [poUsePipes, poStderrToOutPut, poNoConsole];
+    Process.ShowWindow := swoHIDE;
+    Process.Execute;
+    try
+      RunInfo:=TStringList.Create;
+      while Process.Running do
+      begin
+        RunInfo.LoadFromStream(Process.Output);
+        for i:=0 to RunInfo.Count-1 do
+        begin
+          Memo1.Lines.Add({$ifdef windows}CP936ToUTF8{$endif}(RunInfo[i]));
+          Memo1.CaretX:=0;
+          Memo1.CaretY:=Memo1.Lines.Count;
+          Application.ProcessMessages;
+        end;
+        Sleep(50);
+      end;
+      RunInfo.LoadFromStream(Process.Output);
+      for i:=0 to RunInfo.Count-1 do
+      begin
+        Memo1.Lines.Add({$ifdef windows}CP936ToUTF8{$endif}(RunInfo[i]));
+        Memo1.CaretX:=0;
+        Memo1.CaretY:=Memo1.Lines.Count;
+        Application.ProcessMessages;
+      end;
+      if Process.ExitCode<>0 then
+      begin
+        Memo1.Lines.Add('编译出错!');
+      end
+      else
+         Memo1.Lines.Add('编译成功！');
+      Memo1.CaretX:=0;
+      Memo1.CaretY:=Memo1.Lines.Count;
+      Application.ProcessMessages;
+    finally
+      RunInfo.Free;
+    end;
+  finally
+    Process.Free;
   end;
 end;
 
@@ -513,9 +651,9 @@ begin
     TargetFile:=TargetFile.Replace('$(TargetOS)',TargetOS,[]);
 
     eGDBFileName:=StringReplace(LazarusIDE.GetPrimaryConfigPath,'config_lazarus','fpcbootstrap',[]);
-    if SetDirSeparators(eGDBFileName[Length(eGDBFileName)])<>SetDirSeparators('/') then
-      eGDBFileName:=eGDBFileName+SetDirSeparators('/');
-    eGDBFileName:=SetDirSeparators(eGDBFileName+GetCompiledTargetCPU+'-'+GetCompiledTargetOS+
+    if SetDirSeparatorsEx(eGDBFileName[Length(eGDBFileName)])<>SetDirSeparatorsEx('/') then
+      eGDBFileName:=eGDBFileName+SetDirSeparatorsEx('/');
+    eGDBFileName:=SetDirSeparatorsEx(eGDBFileName+GetCompiledTargetCPU+'-'+GetCompiledTargetOS+
       '/gdb/'+TargetCPUOS+'/gdb'{$ifdef windows}+'.exe'{$endif});
 
     eLocalFileName:=ExtractFilePath(LazarusIDE.ActiveProject.ProjectInfoFile)+TargetFile;
@@ -569,13 +707,29 @@ begin
 end;
 
 procedure TQFCompilerRun.FormCreate(Sender: TObject);
+var
+  crossdir:String;
 begin
-  SetProjectConfig;
+  //SetProjectConfig;
   CBCPU.Text:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetCPU;
   CBOS.Text:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetOS;
+  if CBCPU.Text='' then
+    CBCPU.Text:=lowerCase({$I %FPCTARGETCPU%});
+  if CBOS.Text='' then
+    CBOS.Text:=lowerCase({$I %FPCTARGETOS%});
   if CBOS.ItemIndex<0 then CBOS.ItemIndex:=0;
   GetCrossLibList;
   CBSUBCPUOSChange(Self);
+  crossdir:=StringReplace(LazarusIDE.GetPrimaryConfigPath,'config_lazarus','',[]);
+  crossdir:=SetDirSeparatorsEx(crossdir+'cross/lib/');
+  {$ifdef linux}
+  if not DirectoryExists(crossdir) then
+    CompilerSpecificversionBtn.Enabled:=false
+  else
+    CompilerSpecificversionBtn.Enabled:=true;
+  {$else}
+    CompilerSpecificversionBtn.Enabled:=false
+  {$endif}
 end;
 
 procedure TQFCompilerRun.btnRemoteDebugClick(Sender: TObject);

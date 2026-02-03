@@ -82,6 +82,7 @@ procedure Register;
 implementation
 
 {$R *.lfm}
+{$i tools.inc}
 
 //dock windows用
 procedure CreateQFRemoteUpdateCrossLib(Sender: TObject; aFormName: string;
@@ -142,14 +143,14 @@ begin
   Result:='';
   p:=LazarusIDE.GetPrimaryConfigPath;
   p:=p.Replace('config_lazarus','',[]);
-  p:=SetDirSeparators(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
+  p:=SetDirSeparatorsEx(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
   try
     f:=TStringList.Create;
     f.LoadFromFile(p);
     for i:=0 to f.Count-1 do
     begin
-      str:=SetDirSeparators('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text);
-      if pos(str,SetDirSeparators(f[i]))>0 then
+      str:=SetDirSeparatorsEx('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text);
+      if pos(str,SetDirSeparatorsEx(f[i]))>0 then
       begin
         Result:=Copy(f[i],pos(CBCPU.Text+'-'+CBOS.Text,f[i]),Length(f[i]));
         Break;
@@ -168,7 +169,7 @@ var
 begin
   crosspath:=LazarusIDE.GetPrimaryConfigPath;
   crosspath:=crosspath.Replace('config_lazarus','',[]);
-  crosspath:=SetDirSeparators(crosspath+'cross\lib\');
+  crosspath:=SetDirSeparatorsEx(crosspath+'cross\lib\');
   try
     CBSUBCPUOS.Items.Clear;
     LibDirList:=TStringList.Create;
@@ -221,7 +222,7 @@ begin
       btnUpdateLibrary.Enabled:=False;
       if not RtcHttpClient1.isConnecting then
         btnConnectClick(Self);
-      DeleteFile(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+ '\liblist.txt'));
+      DeleteFile(SetDirSeparatorsEx(LazarusIDE.GetPrimaryConfigPath+ '\liblist.txt'));
       with RtcDataRequest1 do
       begin
         Request.Info.AsString['request_type'] :='downloadliblist';
@@ -242,7 +243,7 @@ var
 begin
   pathcross:=LazarusIDE.GetPrimaryConfigPath;
   pathcross:=pathcross.Replace('config_lazarus','',[]);
-  pathcross:=SetDirSeparators(pathcross+'cross\lib\'+CBCPU.Text+'-'+CBOS.Text+'-'+Edit1.Text+'\');
+  pathcross:=SetDirSeparatorsEx(pathcross+'cross\lib\'+CBCPU.Text+'-'+CBOS.Text+'-'+Edit1.Text+'\');
   if (trim(Edit1.Text)<>'') and (not DirectoryExists(pathcross)) then
   begin
     ForceDirectories(pathcross);
@@ -266,7 +267,7 @@ procedure TQFRemoteUpdateCrossLib.FormClose(Sender: TObject; var CloseAction: TC
 var
   ini:TIniFile;
 begin
-  ini:=TIniFile.Create(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+'\RemoteDebugConfig.ini'));
+  ini:=TIniFile.Create(SetDirSeparatorsEx(LazarusIDE.GetPrimaryConfigPath+'\RemoteDebugConfig.ini'));
   ini.WriteString('参数','ip',eServerAddr.Text);
   ini.WriteString('参数','port',eServerPort.Text);
   ini.Free;
@@ -304,7 +305,7 @@ begin
   finally
     Config.free;
   end;
-  ini:=TIniFile.Create(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+'\RemoteDebugConfig.ini'));
+  ini:=TIniFile.Create(SetDirSeparatorsEx(LazarusIDE.GetPrimaryConfigPath+'\RemoteDebugConfig.ini'));
   eServerAddr.Text:=ini.ReadString('参数','ip','');
   eServerPort.Text:=ini.ReadString('参数','port','8080');
   ini.Free;
@@ -366,10 +367,10 @@ begin
     if Request.Info.AsString['request_type'] = 'downloadliblist' then
     begin
       // 下载请求
-      DeleteFile(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+'\liblist.txt'));
+      DeleteFile(SetDirSeparatorsEx(LazarusIDE.GetPrimaryConfigPath+'\liblist.txt'));
       crosspath:=LazarusIDE.GetPrimaryConfigPath;
       crosspath:=crosspath.Replace('config_lazarus','',[]);
-      crosspath:=SetDirSeparators(crosspath+'cross\lib\'+TargetCPUOS+'\');
+      crosspath:=SetDirSeparatorsEx(crosspath+'cross\lib\'+TargetCPUOS+'\');
       if DirectoryExists(crosspath) then
       begin
         DeleteDirectory(crosspath,False);
@@ -422,7 +423,7 @@ begin
   Label7.Caption:=LibFileList.ValueFromIndex[i];
   path:=LazarusIDE.GetPrimaryConfigPath;
   path:=path.Replace('config_lazarus','',[]);
-  path:=SetDirSeparators(path+'cross\lib\'+TargetCPUOS+'\');
+  path:=SetDirSeparatorsEx(path+'cross\lib\'+TargetCPUOS+'\');
   if not DirectoryExists(path) then
       ForceDirectories(path);
   DeleteFile(path+LibFileList.ValueFromIndex[i]);
@@ -534,14 +535,14 @@ begin
     begin
       // 读取数据并保存到文件
       s := Read;
-      FDownloadFileName:=SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+'\liblist.txt');
+      FDownloadFileName:=SetDirSeparatorsEx(LazarusIDE.GetPrimaryConfigPath+'\liblist.txt');
       Write_File(FDownloadFileName, s, Request.ContentIn -length(s));
 
       if Response.Done then
       begin
         // 下载完成
         LibFileList:=TStringList.Create;
-        LibFileList.LoadFromFile(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+'\liblist.txt'));
+        LibFileList.LoadFromFile(SetDirSeparatorsEx(LazarusIDE.GetPrimaryConfigPath+'\liblist.txt'));
         Nextno:=0;
         DownLibFiles(Nextno);
       end;

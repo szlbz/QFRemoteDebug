@@ -78,6 +78,7 @@ procedure Register;
 implementation
 
 {$R *.lfm}
+{$i tools.inc}
 
 //dock windows用
 procedure CreateQFRemoteDebug(Sender: TObject; aFormName: string;
@@ -138,14 +139,14 @@ begin
   Result:='';
   p:=LazarusIDE.GetPrimaryConfigPath;
   p:=p.Replace('config_lazarus','',[]);
-  p:=SetDirSeparators(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
+  p:=SetDirSeparatorsEx(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
   try
     f:=TStringList.Create;
     f.LoadFromFile(p);
     for i:=0 to f.Count-1 do
     begin
-      str:=SetDirSeparators('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text);
-      if pos(str,SetDirSeparators(f[i]))>0 then
+      str:=SetDirSeparatorsEx('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text);
+      if pos(str,SetDirSeparatorsEx(f[i]))>0 then
       begin
         Result:=Copy(f[i],pos(CBCPU.Text+'-'+CBOS.Text,f[i]),Length(f[i]));
         Break;
@@ -164,13 +165,13 @@ var
 begin
   p:=LazarusIDE.GetPrimaryConfigPath;
   p:=p.Replace('config_lazarus','',[]);
-  p:=SetDirSeparators(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
+  p:=SetDirSeparatorsEx(p+'fpc\bin\'+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+'\fpc.cfg');
   try
     f:=TStringList.Create;
     f.LoadFromFile(p);
     for i:=0 to f.Count-1 do
     begin
-      if pos(SetDirSeparators('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text), f[i])>0 then
+      if pos(SetDirSeparatorsEx('\cross\lib\'+CBCPU.Text+'-'+CBOS.Text), f[i])>0 then
       begin
         s:=Copy(f[i],1,pos(CBCPU.Text+'-'+CBOS.Text,f[i])-1);
         f[i]:=s+CBSUBCPUOS.Text;
@@ -200,7 +201,7 @@ var
 begin
   crosspath:=LazarusIDE.GetPrimaryConfigPath;
   crosspath:=crosspath.Replace('config_lazarus','',[]);
-  crosspath:=SetDirSeparators(crosspath+'cross\lib\');
+  crosspath:=SetDirSeparatorsEx(crosspath+'cross\lib\');
   try
     CBSUBCPUOS.Items.Clear;
     LibDirList:=TStringList.Create;
@@ -256,9 +257,9 @@ begin
 
     eGDBFileName := StringReplace(LazarusIDE.GetPrimaryConfigPath,'config_lazarus','fpcbootstrap',[]);
 
-    if SetDirSeparators(eGDBFileName[Length(eGDBFileName)])<>SetDirSeparators('/') then
-      eGDBFileName:=eGDBFileName+SetDirSeparators('/');
-    eGDBFileName:=SetDirSeparators(eGDBFileName+GetCompiledTargetCPU+'-'+GetCompiledTargetOS+
+    if SetDirSeparatorsEx(eGDBFileName[Length(eGDBFileName)])<>SetDirSeparatorsEx('/') then
+      eGDBFileName:=eGDBFileName+SetDirSeparatorsEx('/');
+    eGDBFileName:=SetDirSeparatorsEx(eGDBFileName+GetCompiledTargetCPU+'-'+GetCompiledTargetOS+
       '/gdb/'+TargetCPUOS+'/gdb'{$ifdef windows}+'.exe'{$endif});
 
     CreateGUID(guid);
@@ -296,7 +297,7 @@ procedure TQFRemoteDebug.FormClose(Sender: TObject; var CloseAction: TCloseActio
 var
   ini:TIniFile;
 begin
-  ini:=TIniFile.Create(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+'\RemoteDebugConfig.ini'));
+  ini:=TIniFile.Create(SetDirSeparatorsEx(LazarusIDE.GetPrimaryConfigPath+'\RemoteDebugConfig.ini'));
   ini.WriteString('参数','ip',eServerAddr.Text);
   ini.WriteString('参数','port',eServerPort.Text);
   ini.Free;
@@ -343,9 +344,9 @@ begin
     TargetFile:=TargetFile.Replace('$(TargetOS)',TargetOS,[]);
 
     eGDBFileName:=StringReplace(LazarusIDE.GetPrimaryConfigPath,'config_lazarus','fpcbootstrap',[]);
-    if SetDirSeparators(eGDBFileName[Length(eGDBFileName)])<>SetDirSeparators('/') then
-      eGDBFileName:=eGDBFileName+SetDirSeparators('/');
-    eGDBFileName:=SetDirSeparators(eGDBFileName+GetCompiledTargetCPU+'-'+GetCompiledTargetOS+
+    if SetDirSeparatorsEx(eGDBFileName[Length(eGDBFileName)])<>SetDirSeparatorsEx('/') then
+      eGDBFileName:=eGDBFileName+SetDirSeparatorsEx('/');
+    eGDBFileName:=SetDirSeparatorsEx(eGDBFileName+GetCompiledTargetCPU+'-'+GetCompiledTargetOS+
       '/gdb/'+TargetCPUOS+'/gdb'{$ifdef windows}+'.exe'{$endif});
 
     eLocalFileName:=ExtractFilePath(LazarusIDE.ActiveProject.ProjectInfoFile)+TargetFile;
@@ -378,7 +379,7 @@ procedure TQFRemoteDebug.FormCreate(Sender: TObject);
 var
   ini:TIniFile;
 begin
-  ini:=TIniFile.Create(SetDirSeparators(LazarusIDE.GetPrimaryConfigPath+'\RemoteDebugConfig.ini'));
+  ini:=TIniFile.Create(SetDirSeparatorsEx(LazarusIDE.GetPrimaryConfigPath+'\RemoteDebugConfig.ini'));
   eServerAddr.Text:=ini.ReadString('参数','ip','');
   eServerPort.Text:=ini.ReadString('参数','port','8080');
   ini.Free;

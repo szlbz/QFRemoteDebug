@@ -1,13 +1,13 @@
 object QFCompilerRun: TQFCompilerRun
   Left = 309
-  Height = 671
+  Height = 775
   Top = 203
   Width = 672
   ActiveControl = btnRemoteDebug
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = 'Compiler / Run Tool'
-  ClientHeight = 671
+  ClientHeight = 775
   ClientWidth = 672
   Color = clBtnFace
   DesignTimePPI = 192
@@ -39,7 +39,7 @@ object QFCompilerRun: TQFCompilerRun
   object pInfo: TPanel
     Left = 0
     Height = 43
-    Top = 628
+    Top = 732
     Width = 672
     Align = alBottom
     BevelOuter = bvLowered
@@ -117,7 +117,7 @@ object QFCompilerRun: TQFCompilerRun
   object CBSUBCPUOS: TComboBox
     AnchorSideTop.Control = Label3
     AnchorSideTop.Side = asrBottom
-    Left = 286
+    Left = 280
     Height = 36
     Top = 64
     Width = 368
@@ -151,19 +151,17 @@ object QFCompilerRun: TQFCompilerRun
     OnMouseEnter = Edit1MouseEnter
   end
   object Label5: TLabel
-    AnchorSideTop.Control = CBSUBCPUOS
-    AnchorSideTop.Side = asrBottom
+    AnchorSideTop.Control = Label2
     Left = 280
     Height = 28
     Top = 120
     Width = 137
-    BorderSpacing.Top = 20
     Caption = 'Build Mode:'
   end
   object ComboBox1: TComboBox
-    AnchorSideTop.Control = Label5
-    AnchorSideTop.Side = asrBottom
-    Left = 286
+    AnchorSideTop.Control = CBCPU
+    AnchorSideTop.Side = asrCenter
+    Left = 280
     Height = 36
     Top = 153
     Width = 368
@@ -179,6 +177,7 @@ object QFCompilerRun: TQFCompilerRun
     Text = 'debug'
   end
   object FastCompilerBtn: TButton
+    AnchorSideTop.Control = btnRemoteDebug
     Left = 356
     Height = 67
     Top = 298
@@ -188,10 +187,13 @@ object QFCompilerRun: TQFCompilerRun
     OnClick = FastCompilerBtnClick
   end
   inline Memo1: TSynEdit
+    AnchorSideTop.Control = CompilerSpecificversionBtn
+    AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 245
-    Top = 374
+    Top = 462
     Width = 638
+    BorderSpacing.Top = 10
     Font.CharSet = ANSI_CHARSET
     Font.Height = -24
     Font.Name = 'Courier New'
@@ -692,5 +694,20 @@ object QFCompilerRun: TQFCompilerRun
         MouseActionsCollapsed = <>
       end
     end
+  end
+  object CompilerSpecificversionBtn: TButton
+    AnchorSideTop.Control = btnRemoteDebug
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 67
+    Hint = '编译特定版本的libc，如：在高版本编译低版本的程序。'
+    Top = 385
+    Width = 638
+    BorderSpacing.Top = 20
+    Caption = 'Compile a specific version of libc'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 9
+    OnClick = CompilerSpecificversionBtnClick
   end
 end
