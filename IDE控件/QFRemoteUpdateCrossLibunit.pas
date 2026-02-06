@@ -8,6 +8,7 @@ uses
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, rtcDataCli, rtcInfo, rtcConn, rtcHttpCli, StdCtrls, ExtCtrls, IniFiles,
   rtcSystem, rtcCliModule,
+  DefaultTranslator,
   //IDE 调试助手需要用到的单元
   DefineTemplates, CompOptsIntf, TransferMacros,
   LCLProc, BaseIDEIntf, ProjectIntf, LazConfigStorage,
@@ -76,13 +77,39 @@ var
   QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib;
   QFRemoteUpdateCrossLibCreator: TIDEWindowCreator;
 
+resourcestring
+  ServerAddress = 'Server Address';
+  ServerPort = 'Server Port';
+  OSSuboptions = 'OS Sub options';
+  ModifyCPU = 'Modify CPU';
+  RemoteDebug = 'Remote Debug';
+  formcaption= 'QFUpdate Cross Lib Assistant';
+  btnRemoteDebugHint = 'Compile the current project/upload and run the current project for debugging';//'编译当前project/上传及运行当前project进行调试';
+  MenuItemCaption = 'QFUpdate Cross Lib Assistant';
+  Namelibdirectoryadded = 'Name lib directory to be added';
+  AddDirectory = 'Add Directory';
+  btnUpdateLibraryCaption = 'Update cross-compiled lib file';
+  edit1hint = 'Name  lib directory to be added';
+
 procedure ShowQFRemoteUpdateCrossLib(Sender: TObject);
 procedure Register;
 
 implementation
 
 {$R *.lfm}
-{$i tools.inc}
+
+function SetDirSeparatorsEx( FileName : String):String;
+Var I : longint;
+
+begin
+  Result:=FileName;
+  For I:=1 to Length(FileName) do
+  begin
+    if (FileName[I]='/') or (FileName[I]='\') then
+      FileName[i]:=DirectorySeparator;
+  end;
+  Result:=FileName;
+end;
 
 //dock windows用
 procedure CreateQFRemoteUpdateCrossLib(Sender: TObject; aFormName: string;
@@ -112,11 +139,11 @@ procedure Register;
 var
   CmdCatToolMenu: TIDECommandCategory;
   ToolQFRemoteUpdateCrossLibCommand: TIDECommand;
-  MenuItemCaption: String;
+  //MenuItemCaption: String;
   MenuCommand: TIDEMenuCommand;
 begin
   // register shortcut and menu item
-  MenuItemCaption:='QFUpdate Cross Lib Assistant';// <- this caption should be replaced by a resourcestring
+  //MenuItemCaption:='QFUpdate Cross Lib Assistant';// <- this caption should be replaced by a resourcestring
   // search shortcut category
   CmdCatToolMenu:=IDECommandList.FindCategoryByName(CommandCategoryCustomName);//CommandCategoryToolMenuName);
   // register shortcut
@@ -184,7 +211,7 @@ begin
       end;
     end;
     CBSUBCPUOS.ItemIndex:=CBSUBCPUOS.Items.IndexOf(GetlibVer);
-    btnUpdateLibrary.Caption:='update Cross Library : '+CBSUBCPUOS.Text;
+    btnUpdateLibrary.Caption:=btnUpdateLibraryCaption + ' : '+CBSUBCPUOS.Text;
   finally
     LibDirList.Free;
   end;
@@ -288,6 +315,17 @@ var
   Config: TConfigStorage;
   TargetCPU,TargetOS:String;
 begin
+
+  Self.Caption:=formcaption;
+  Label5.Caption:=ServerAddress;
+  Label4.Caption:=ServerPort;
+  Label3.Caption:=OSSuboptions;
+  label8.Caption:=Namelibdirectoryadded;
+  Edit1.TextHint:=edit1hint;
+  Edit1.Hint:=edit1hint;
+  Button1.Caption:=AddDirectory;
+  btnUpdateLibrary.Caption:=btnUpdateLibraryCaption;
+
   try
     Config:=GetIDEConfigStorage(LazarusIDE.ActiveProject.ProjectInfoFile,true);
     if Config.GetValue('ProjectOptions/Version/Value','')<>'' then

@@ -1,0 +1,180 @@
+object DockbkFrm: TDockbkFrm
+  Left = 0
+  Height = 493
+  Top = 0
+  Width = 693
+  Caption = 'Lazarus窗口布局备份工具'
+  ClientHeight = 493
+  ClientWidth = 693
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
+  OnCreate = FormCreate
+  object Panel2: TPanel
+    Left = 0
+    Height = 493
+    Top = 0
+    Width = 693
+    Align = alClient
+    BevelOuter = bvNone
+    ClientHeight = 493
+    ClientWidth = 693
+    TabOrder = 0
+    object PageControl1: TPageControl
+      Left = 0
+      Height = 460
+      Top = 0
+      Width = 693
+      ActivePage = TabSheet1
+      Align = alClient
+      TabIndex = 0
+      TabOrder = 0
+      object TabSheet1: TTabSheet
+        Caption = '备份布局'
+        ClientHeight = 423
+        ClientWidth = 683
+        object GroupBox2: TGroupBox
+          AnchorSideTop.Control = TabSheet1
+          Left = 0
+          Height = 121
+          Top = 10
+          Width = 683
+          Align = alTop
+          BorderSpacing.Top = 10
+          Caption = '备份设置'
+          ClientHeight = 97
+          ClientWidth = 681
+          TabOrder = 0
+          object Label2: TLabel
+            AnchorSideTop.Control = edtBackupFile
+            AnchorSideTop.Side = asrCenter
+            Left = 16
+            Height = 23
+            Top = 29
+            Width = 90
+            Caption = '备份文件路径'
+            ParentColor = False
+          end
+          object edtBackupFile: TEdit
+            Left = 112
+            Height = 40
+            Top = 20
+            Width = 480
+            Anchors = [akTop, akLeft, akRight]
+            TabOrder = 0
+          end
+          object btnBrowseBackup: TButton
+            AnchorSideTop.Control = edtBackupFile
+            AnchorSideTop.Side = asrCenter
+            Left = 600
+            Height = 25
+            Top = 28
+            Width = 75
+            Anchors = [akTop, akRight]
+            Caption = '浏览...'
+            TabOrder = 1
+            OnClick = btnBrowseBackupClick
+          end
+        end
+        object btnBackup: TBitBtn
+          AnchorSideTop.Control = GroupBox2
+          AnchorSideTop.Side = asrBottom
+          Left = 24
+          Height = 41
+          Top = 141
+          Width = 144
+          BorderSpacing.Top = 10
+          Caption = '备份当前布局'
+          TabOrder = 1
+          OnClick = btnBackupClick
+        end
+        object Button1: TButton
+          Left = 96
+          Height = 41
+          Top = 231
+          Width = 104
+          Caption = 'Button1'
+          TabOrder = 2
+        end
+      end
+      object TabSheet2: TTabSheet
+        Caption = '恢复布局'
+        ClientHeight = 423
+        ClientWidth = 683
+        ImageIndex = 1
+        object Splitter1: TSplitter
+          Left = 200
+          Height = 423
+          Top = 0
+          Width = 5
+        end
+        object Panel3: TPanel
+          Left = 0
+          Height = 423
+          Top = 0
+          Width = 200
+          Align = alLeft
+          BevelOuter = bvNone
+          ClientHeight = 423
+          ClientWidth = 200
+          TabOrder = 0
+          object ListBox1: TListBox
+            Left = 0
+            Height = 375
+            Top = 0
+            Width = 200
+            Align = alClient
+            ItemHeight = 0
+            TabOrder = 0
+            TopIndex = -1
+            OnClick = ListBox1Click
+          end
+          object btnRestore: TBitBtn
+            Left = 0
+            Height = 48
+            Top = 375
+            Width = 200
+            Align = alBottom
+            Caption = '恢复选中布局'
+            TabOrder = 1
+            OnClick = btnRestoreClick
+          end
+        end
+        object Memo1: TMemo
+          Left = 205
+          Height = 423
+          Top = 0
+          Width = 478
+          Align = alClient
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -12
+          Font.Name = 'Courier New'
+          Font.Pitch = fpFixed
+          Font.Quality = fqDraft
+          ParentFont = False
+          ReadOnly = True
+          ScrollBars = ssBoth
+          TabOrder = 1
+        end
+      end
+    end
+    object Panel4: TPanel
+      Left = 0
+      Height = 33
+      Top = 460
+      Width = 693
+      Align = alBottom
+      ClientHeight = 33
+      ClientWidth = 693
+      TabOrder = 1
+      object lblStatus: TLabel
+        AnchorSideTop.Control = Panel4
+        AnchorSideTop.Side = asrCenter
+        Left = 8
+        Height = 18
+        Top = 7
+        Width = 59
+        Caption = 'lblStatus'
+      end
+    end
+  end
+end

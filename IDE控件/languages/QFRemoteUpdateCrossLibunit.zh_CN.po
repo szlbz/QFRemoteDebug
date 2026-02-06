@@ -1,0 +1,59 @@
+# Translation of QFUpdate Cross Lib Assistant to Chinese (Simplified)
+# This file is distributed under the same license as the original.
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: qfremoteupdatecrosslibunit.adddirectory
+msgid "Add Directory"
+msgstr "添加目录"
+
+#: qfremoteupdatecrosslibunit.btnremotedebughint
+msgid "Compile the current project/upload and run the current project for debugging"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.btnupdatelibrarycaption
+msgid "Update cross-compiled lib file"
+msgstr "更新交叉编译lib文件"
+
+#: qfremoteupdatecrosslibunit.edit1hint
+msgid "Name  lib directory to be added"
+msgstr "待添加的lib目录名称"
+
+#: qfremoteupdatecrosslibunit.formcaption
+msgctxt "qfremoteupdatecrosslibunit.formcaption"
+msgid "QFUpdate Cross Lib Assistant"
+msgstr "QF更新交叉编译库助手"
+
+#: qfremoteupdatecrosslibunit.menuitemcaption
+msgctxt "qfremoteupdatecrosslibunit.menuitemcaption"
+msgid "QFUpdate Cross Lib Assistant"
+msgstr "QF更新交叉编译库助手"
+
+#: qfremoteupdatecrosslibunit.modifycpu
+msgid "Modify CPU"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.namelibdirectoryadded
+msgid "Name lib directory to be added"
+msgstr "指定要添加的库目录"
+
+#: qfremoteupdatecrosslibunit.ossuboptions
+msgid "OS Sub options"
+msgstr "OS子选项"
+
+#: qfremoteupdatecrosslibunit.remotedebug
+msgid "Remote Debug"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.serveraddress
+msgid "Server Address"
+msgstr "服务端IP"
+
+#: qfremoteupdatecrosslibunit.serverport
+msgid "Server Port"
+msgstr "服务端端口"
+

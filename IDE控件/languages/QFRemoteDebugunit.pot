@@ -1,0 +1,37 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: qfremotedebugunit.btnremotedebughint
+msgid "Compile the current project/upload and run the current project for debugging"
+msgstr ""
+
+#: qfremotedebugunit.formcaption
+msgctxt "qfremotedebugunit.formcaption"
+msgid "QFRemoteDebug Assistant"
+msgstr ""
+
+#: qfremotedebugunit.menuitemcaption
+msgctxt "qfremotedebugunit.menuitemcaption"
+msgid "QFRemoteDebug Assistant"
+msgstr ""
+
+#: qfremotedebugunit.modifycpu
+msgid "Modify CPU"
+msgstr ""
+
+#: qfremotedebugunit.ossuboptions
+msgid "OS Sub options"
+msgstr ""
+
+#: qfremotedebugunit.remotedebug
+msgid "Remote Debug"
+msgstr ""
+
+#: qfremotedebugunit.serveraddress
+msgid "Server Address"
+msgstr ""
+
+#: qfremotedebugunit.serverport
+msgid "Server Port"
+msgstr ""
+

@@ -1,0 +1,51 @@
+# Chinese translations for QFRemoteDebugUnit
+# Copyright (C) 2024
+msgid ""
+msgstr ""
+"Project-Id-Version: QFRemoteDebugUnit\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0800\n"
+"PO-Revision-Date: 2024-01-01 00:00+0800\n"
+"Last-Translator: \n"
+"Language-Team: Chinese (Simplified)\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Manual\n"
+
+#: qfremotedebugunit.btnremotedebughint
+msgid "Compile the current project/upload and run the current project for debugging"
+msgstr "编译当前project/上传及运行当前project进行调试"
+
+#: qfremotedebugunit.formcaption
+msgctxt "qfremotedebugunit.formcaption"
+msgid "QFRemoteDebug Assistant"
+msgstr "QF远程调试助手"
+
+#: qfremotedebugunit.menuitemcaption
+msgctxt "qfremotedebugunit.menuitemcaption"
+msgid "QFRemoteDebug Assistant"
+msgstr "QF远程调试助手"
+
+#: qfremotedebugunit.modifycpu
+msgid "Modify CPU"
+msgstr "修改CPU类型"
+
+#: qfremotedebugunit.ossuboptions
+msgid "OS Sub options"
+msgstr "OS子选项"
+
+#: qfremotedebugunit.remotedebug
+msgid "Remote Debug"
+msgstr "远程调试"
+
+#: qfremotedebugunit.serveraddress
+msgid "Server Address"
+msgstr "服务端IP"
+
+#: qfremotedebugunit.serverport
+msgid "Server Port"
+msgstr "服务端端口"
+

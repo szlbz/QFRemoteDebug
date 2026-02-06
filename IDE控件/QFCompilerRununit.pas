@@ -8,6 +8,7 @@ uses
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, rtcDataCli, rtcInfo, rtcConn, rtcHttpCli, StdCtrls, ExtCtrls, IniFiles,
   rtcSystem, rtcCliModule,
+  DefaultTranslator,
   //GetCompilerOptions:
   CompilerOptions, LazUTF8,LazFileUtils,Process,LConvEncoding,
 
@@ -74,13 +75,25 @@ var
   QFCompilerRun: TQFCompilerRun;
   QFCompilerRunCreator: TIDEWindowCreator;
 
+resourcestring
+  OSSuboptions = 'OS Sub options';
+  formcaption = 'QFCompilerRun Assistant';
+  MenuItemCaption = 'QFCompilerRun Assistant';
+  BuildMode = 'Build Mode';
+  FbtnRemoteDebug = 'Compiler / Run';
+  FbtnRemoteDebughint = 'Compile and run the current project';//'编译当前project及运行当前project';
+  FFastCompilerBtn = 'Fast Compiler';
+  FCompilerSpecificversionBtn ='Compile a specific version of libc';
+  FCompilerSpecificversionBtnhint = 'Compile a specific version of libc, such as compiling a lower version of a program from a higher version.';//'编译特定版本的libc，如：在高版本编译低版本的程序。';
+  TargetFileName = 'TargetFileName';
+
+
 procedure ShowQFCompilerRun(Sender: TObject);
 procedure Register;
 
 implementation
 
 {$R *.lfm}
-{$i tools.inc}
 
 //dock windows用
 procedure CreateTQFCompilerRun(Sender: TObject; aFormName: string;
@@ -110,11 +123,11 @@ procedure Register;
 var
   CmdCatToolMenu: TIDECommandCategory;
   ToolQFCompilerRunCommand: TIDECommand;
-  MenuItemCaption: String;
+  //MenuItemCaption: String;
   MenuCommand: TIDEMenuCommand;
 begin
   // register shortcut and menu item
-  MenuItemCaption:='QFCompilerRun';//'远程调试助手'; // <- this caption should be replaced by a resourcestring
+  //MenuItemCaption:='QFCompilerRun';//'远程调试助手'; // <- this caption should be replaced by a resourcestring
   // search shortcut category
   CmdCatToolMenu:=IDECommandList.FindCategoryByName(CommandCategoryCustomName);//CommandCategoryToolMenuName);
   // register shortcut
@@ -130,6 +143,19 @@ begin
     MenuItemCaption,//菜单标题
     nil, nil,ToolQFCompilerRunCommand);
 
+end;
+
+function SetDirSeparatorsEx( FileName : String):String;
+Var I : longint;
+
+begin
+  Result:=FileName;
+  For I:=1 to Length(FileName) do
+  begin
+    if (FileName[I]='/') or (FileName[I]='\') then
+      FileName[i]:=DirectorySeparator;
+  end;
+  Result:=FileName;
 end;
 
 function TQFCompilerRun.GetLibVer:String;
@@ -710,6 +736,16 @@ procedure TQFCompilerRun.FormCreate(Sender: TObject);
 var
   crossdir:String;
 begin
+  Self.Caption:=formcaption;
+  Label3.Caption:=OSSuboptions;
+  Label4.Caption:=TargetFileName;
+  Label5.Caption:=BuildMode;
+  btnRemoteDebug.Caption:=FbtnRemoteDebug;
+  btnRemoteDebug.Hint:=FbtnRemoteDebughint;
+  FastCompilerBtn.Caption:=FFastCompilerBtn;
+  CompilerSpecificversionBtn.Caption:=FCompilerSpecificversionBtn;
+  CompilerSpecificversionBtn.hint:=FCompilerSpecificversionBtnhint;
+
   //SetProjectConfig;
   CBCPU.Text:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetCPU;
   CBOS.Text:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetOS;

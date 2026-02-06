@@ -1,0 +1,59 @@
+# Chinese translations for QFCompilerRunUnit
+# Copyright (C) 2024
+msgid ""
+msgstr ""
+"Project-Id-Version: QFCompilerRunUnit\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0800\n"
+"PO-Revision-Date: 2024-01-01 00:00+0800\n"
+"Last-Translator: \n"
+"Language-Team: Chinese (Simplified)\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Manual\n"
+
+#: qfcompilerrununit.buildmode
+msgid "Build Mode"
+msgstr "编译模式"
+
+#: qfcompilerrununit.fbtnremotedebug
+msgid "Compiler / Run"
+msgstr "编译 / 运行"
+
+#: qfcompilerrununit.fbtnremotedebughint
+msgid "Compile and run the current project"
+msgstr "编译/运行当前project"
+
+#: qfcompilerrununit.fcompilerspecificversionbtn
+msgid "Compile a specific version of libc"
+msgstr "编译特定版本的libc"
+
+#: qfcompilerrununit.fcompilerspecificversionbtnhint
+msgid "Compile a specific version of libc, such as compiling a lower version of a program from a higher version."
+msgstr "编译特定版本的libc，如：在高版本编译低版本的程序。"
+
+#: qfcompilerrununit.ffastcompilerbtn
+msgid "Fast Compiler"
+msgstr "快速编译"
+
+#: qfcompilerrununit.formcaption
+msgctxt "qfcompilerrununit.formcaption"
+msgid "QFCompilerRun Assistant"
+msgstr "QF编译运行助手"
+
+#: qfcompilerrununit.menuitemcaption
+msgctxt "qfcompilerrununit.menuitemcaption"
+msgid "QFCompilerRun Assistant"
+msgstr "QF编译运行助手"
+
+#: qfcompilerrununit.ossuboptions
+msgid "OS Sub options"
+msgstr "OS子选项"
+
+#: qfcompilerrununit.targetfilename
+msgid "TargetFileName"
+msgstr "目标文件名称"
+

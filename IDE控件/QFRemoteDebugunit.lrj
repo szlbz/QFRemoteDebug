@@ -1,0 +1,18 @@
+{"version":1,"strings":[
+{"hash":93113988,"name":"tqfremotedebug.caption","sourcebytes":[81,70,82,101,109,111,116,101,68,101,98,117,103,32,65,115,115,105,115,116,97,110,116],"value":"QFRemoteDebug Assistant"},
+{"hash":203210580,"name":"tqfremotedebug.label4.caption","sourcebytes":[83,101,114,118,101,114,32,80,111,114,116],"value":"Server Port"},
+{"hash":188173683,"name":"tqfremotedebug.label5.caption","sourcebytes":[83,101,114,118,101,114,32,65,100,100,114,101,115,115],"value":"Server Address"},
+{"hash":242608,"name":"tqfremotedebug.eserverport.text","sourcebytes":[56,48,56,48],"value":"8080"},
+{"hash":169027393,"name":"tqfremotedebug.eserveraddr.text","sourcebytes":[49,50,55,46,48,46,48,46,49],"value":"127.0.0.1"},
+{"hash":167731365,"name":"tqfremotedebug.btnremotedebug.hint","sourcebytes":[231,188,150,232,175,145,229,189,147,229,137,141,112,114,111,106,101,99,116,47,228,184,138,228,188,160,229,143,138,232,191,144,232,161,140,229,189,147,229,137,141,112,114,111,106,101,99,116,232,191,155,232,161,140,232,176,131,232,175,149],"value":"\u7F16\u8BD1\u5F53\u524Dproject/\u4E0A\u4F20\u53CA\u8FD0\u884C\u5F53\u524Dproject\u8FDB\u884C\u8C03\u8BD5"},
+{"hash":46595863,"name":"tqfremotedebug.btnremotedebug.caption","sourcebytes":[82,101,109,111,116,101,32,68,101,98,117,103],"value":"Remote Debug"},
+{"hash":86477816,"name":"tqfremotedebug.label8.caption","sourcebytes":[76,97,98,101,108,56],"value":"Label8"},
+{"hash":86477817,"name":"tqfremotedebug.label9.caption","sourcebytes":[76,97,98,101,108,57],"value":"Label9"},
+{"hash":7538120,"name":"tqfremotedebug.cbos.text","sourcebytes":[108,105,110,117,120],"value":"linux"},
+{"hash":21610,"name":"tqfremotedebug.label1.caption","sourcebytes":[79,83,58],"value":"OS:"},
+{"hash":75909978,"name":"tqfremotedebug.label2.caption","sourcebytes":[67,80,85,239,188,154],"value":"CPU\uFF1A"},
+{"hash":126393332,"name":"tqfremotedebug.cbcpu.text","sourcebytes":[97,97,114,99,104,54,52],"value":"aarch64"},
+{"hash":218048757,"name":"tqfremotedebug.btsaveconfig.caption","sourcebytes":[228,191,174,230,148,185,67,80,85],"value":"\u4FEE\u6539CPU"},
+{"hash":12285,"name":"tqfremotedebug.cbsubcpuos.text","sourcebytes":[45,45,45],"value":"---"},
+{"hash":33904218,"name":"tqfremotedebug.label3.caption","sourcebytes":[79,83,32,83,117,98,32,111,112,116,105,111,110,115,58],"value":"OS Sub options:"}
+]}

@@ -1,0 +1,16 @@
+{"version":1,"strings":[
+{"hash":237162924,"name":"tqfcompilerrun.caption","sourcebytes":[67,111,109,112,105,108,101,114,32,47,32,82,117,110,32,84,111,111,108],"value":"Compiler / Run Tool"},
+{"hash":121198483,"name":"tqfcompilerrun.btnremotedebug.hint","sourcebytes":[231,188,150,232,175,145,229,189,147,229,137,141,112,114,111,106,101,99,116,229,143,138,232,191,144,232,161,140,229,189,147,229,137,141,112,114,111,106,101,99],"value":"\u7F16\u8BD1\u5F53\u524Dproject\u53CA\u8FD0\u884C\u5F53\u524Dprojec"},
+{"hash":41312222,"name":"tqfcompilerrun.btnremotedebug.caption","sourcebytes":[67,111,109,112,105,108,101,114,32,47,32,82,117,110],"value":"Compiler / Run"},
+{"hash":7538120,"name":"tqfcompilerrun.cbos.text","sourcebytes":[108,105,110,117,120],"value":"linux"},
+{"hash":21610,"name":"tqfcompilerrun.label1.caption","sourcebytes":[79,83,58],"value":"OS:"},
+{"hash":75909978,"name":"tqfcompilerrun.label2.caption","sourcebytes":[67,80,85,239,188,154],"value":"CPU\uFF1A"},
+{"hash":126393332,"name":"tqfcompilerrun.cbcpu.text","sourcebytes":[97,97,114,99,104,54,52],"value":"aarch64"},
+{"hash":33904218,"name":"tqfcompilerrun.label3.caption","sourcebytes":[79,83,32,83,117,98,32,111,112,116,105,111,110,115,58],"value":"OS Sub options:"},
+{"hash":173585674,"name":"tqfcompilerrun.label4.caption","sourcebytes":[84,97,114,103,101,116,70,105,108,101,78,97,109,101,58],"value":"TargetFileName:"},
+{"hash":102472362,"name":"tqfcompilerrun.label5.caption","sourcebytes":[66,117,105,108,100,32,77,111,100,101,58],"value":"Build Mode:"},
+{"hash":6994359,"name":"tqfcompilerrun.combobox1.text","sourcebytes":[100,101,98,117,103],"value":"debug"},
+{"hash":181184034,"name":"tqfcompilerrun.fastcompilerbtn.caption","sourcebytes":[70,97,115,116,32,67,111,109,112,105,108,101,114],"value":"Fast Compiler"},
+{"hash":42372674,"name":"tqfcompilerrun.compilerspecificversionbtn.hint","sourcebytes":[231,188,150,232,175,145,231,137,185,229,174,154,231,137,136,230,156,172,231,154,132,108,105,98,99,239,188,140,229,166,130,239,188,154,229,156,168,233,171,152,231,137,136,230,156,172,231,188,150,232,175,145,228,189,142,231,137,136,230,156,172,231,154,132,231,168,139,229,186,143,227,128,130],"value":"\u7F16\u8BD1\u7279\u5B9A\u7248\u672C\u7684libc\uFF0C\u5982\uFF1A\u5728\u9AD8\u7248\u672C\u7F16\u8BD1\u4F4E\u7248\u672C\u7684\u7A0B\u5E8F\u3002"},
+{"hash":5143219,"name":"tqfcompilerrun.compilerspecificversionbtn.caption","sourcebytes":[67,111,109,112,105,108,101,32,97,32,115,112,101,99,105,102,105,99,32,118,101,114,115,105,111,110,32,111,102,32,108,105,98,99],"value":"Compile a specific version of libc"}
+]}

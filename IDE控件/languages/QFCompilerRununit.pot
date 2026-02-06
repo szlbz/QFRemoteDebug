@@ -1,0 +1,45 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: qfcompilerrununit.buildmode
+msgid "Build Mode"
+msgstr ""
+
+#: qfcompilerrununit.fbtnremotedebug
+msgid "Compiler / Run"
+msgstr ""
+
+#: qfcompilerrununit.fbtnremotedebughint
+msgid "Compile and run the current project"
+msgstr ""
+
+#: qfcompilerrununit.fcompilerspecificversionbtn
+msgid "Compile a specific version of libc"
+msgstr ""
+
+#: qfcompilerrununit.fcompilerspecificversionbtnhint
+msgid "Compile a specific version of libc, such as compiling a lower version of a program from a higher version."
+msgstr ""
+
+#: qfcompilerrununit.ffastcompilerbtn
+msgid "Fast Compiler"
+msgstr ""
+
+#: qfcompilerrununit.formcaption
+msgctxt "qfcompilerrununit.formcaption"
+msgid "QFCompilerRun Assistant"
+msgstr ""
+
+#: qfcompilerrununit.menuitemcaption
+msgctxt "qfcompilerrununit.menuitemcaption"
+msgid "QFCompilerRun Assistant"
+msgstr ""
+
+#: qfcompilerrununit.ossuboptions
+msgid "OS Sub options"
+msgstr ""
+
+#: qfcompilerrununit.targetfilename
+msgid "TargetFileName"
+msgstr ""
+

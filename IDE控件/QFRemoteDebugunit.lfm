@@ -1,14 +1,14 @@
 object QFRemoteDebug: TQFRemoteDebug
   Left = 309
-  Height = 496
+  Height = 538
   Top = 203
-  Width = 631
+  Width = 632
   ActiveControl = btnRemoteDebug
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = 'QFRemoteDebug Assistant'
-  ClientHeight = 496
-  ClientWidth = 631
+  ClientHeight = 538
+  ClientWidth = 632
   Color = clBtnFace
   DesignTimePPI = 192
   Font.CharSet = ANSI_CHARSET
@@ -23,42 +23,45 @@ object QFRemoteDebug: TQFRemoteDebug
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   object Label4: TLabel
-    Left = 323
+    Left = 324
     Height = 28
-    Top = 19
+    Top = 20
     Width = 129
     Caption = 'Server Port'
   end
   object Label5: TLabel
     Left = 16
     Height = 28
-    Top = 19
+    Top = 20
     Width = 171
     Caption = 'Server Address'
   end
   object eServerPort: TEdit
-    Left = 323
+    Left = 324
     Height = 36
-    Top = 59
-    Width = 112
+    Top = 60
+    Width = 180
     TabOrder = 1
     Text = '8080'
   end
   object eServerAddr: TEdit
     Left = 16
     Height = 36
-    Top = 59
-    Width = 285
+    Top = 60
+    Width = 284
     TabOrder = 0
     Text = '127.0.0.1'
     OnExit = eServerAddrExit
   end
   object btnRemoteDebug: TButton
+    AnchorSideTop.Control = CBCPU
+    AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 50
     Hint = '编译当前project/上传及运行当前project进行调试'
-    Top = 360
+    Top = 334
     Width = 596
+    BorderSpacing.Top = 10
     Caption = 'Remote Debug'
     ParentShowHint = False
     ShowHint = True
@@ -67,9 +70,9 @@ object QFRemoteDebug: TQFRemoteDebug
   end
   object pInfo: TPanel
     Left = 0
-    Height = 43
-    Top = 453
-    Width = 631
+    Height = 44
+    Top = 494
+    Width = 632
     Align = alBottom
     BevelOuter = bvLowered
     ParentBackground = False
@@ -81,7 +84,7 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 28
-    Top = 105
+    Top = 106
     Width = 75
     BorderSpacing.Top = 10
     Caption = 'Label8'
@@ -92,7 +95,7 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 28
-    Top = 143
+    Top = 144
     Width = 75
     BorderSpacing.Top = 10
     Caption = 'Label9'
@@ -109,9 +112,9 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 36
-    Top = 217
+    Top = 214
     Width = 176
-    BorderSpacing.Top = 5
+    BorderSpacing.Top = 4
     ItemHeight = 28
     ItemIndex = 0
     Items.Strings = (
@@ -125,25 +128,33 @@ object QFRemoteDebug: TQFRemoteDebug
     OnChange = CBOSChange
   end
   object Label1: TLabel
+    AnchorSideTop.Control = Label9
+    AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 28
-    Top = 184
+    Top = 182
     Width = 41
+    BorderSpacing.Top = 10
     Caption = 'OS:'
   end
   object Label2: TLabel
     AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = CBOS
+    AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 28
-    Top = 271
+    Top = 260
     Width = 77
+    BorderSpacing.Top = 10
     Caption = 'CPU：'
   end
   object CBCPU: TComboBox
     AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 36
-    Top = 303
+    Top = 288
     Width = 232
     ItemHeight = 28
     ItemIndex = 0
@@ -165,8 +176,8 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Side = asrCenter
     Left = 272
     Height = 50
-    Top = 296
-    Width = 135
+    Top = 281
+    Width = 192
     Caption = '修改CPU'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -184,9 +195,9 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Side = asrBottom
     Left = 240
     Height = 36
-    Top = 217
+    Top = 214
     Width = 372
-    BorderSpacing.Top = 5
+    BorderSpacing.Top = 4
     ItemHeight = 28
     ItemIndex = 0
     Items.Strings = (
@@ -203,7 +214,7 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideTop.Control = Label1
     Left = 240
     Height = 28
-    Top = 184
+    Top = 182
     Width = 179
     Caption = 'OS Sub options:'
   end

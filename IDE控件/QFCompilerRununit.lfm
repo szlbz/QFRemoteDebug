@@ -1,19 +1,18 @@
 object QFCompilerRun: TQFCompilerRun
   Left = 309
-  Height = 775
+  Height = 388
   Top = 203
-  Width = 672
+  Width = 336
   ActiveControl = btnRemoteDebug
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = 'Compiler / Run Tool'
-  ClientHeight = 775
-  ClientWidth = 672
+  ClientHeight = 388
+  ClientWidth = 336
   Color = clBtnFace
-  DesignTimePPI = 192
   Font.CharSet = ANSI_CHARSET
   Font.Color = clBlack
-  Font.Height = -24
+  Font.Height = -12
   Font.Name = 'Century'
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
@@ -24,12 +23,12 @@ object QFCompilerRun: TQFCompilerRun
   object btnRemoteDebug: TButton
     AnchorSideTop.Control = Edit1
     AnchorSideTop.Side = asrBottom
-    Left = 16
-    Height = 67
-    Hint = '编译当前project及运行当前projec'
-    Top = 298
-    Width = 298
-    BorderSpacing.Top = 20
+    Left = 8
+    Height = 34
+    Hint = '编译当前project及运行当前project'
+    Top = 191
+    Width = 149
+    BorderSpacing.Top = 10
     Caption = 'Compiler / Run'
     ParentShowHint = False
     ShowHint = True
@@ -38,9 +37,9 @@ object QFCompilerRun: TQFCompilerRun
   end
   object pInfo: TPanel
     Left = 0
-    Height = 43
-    Top = 732
-    Width = 672
+    Height = 22
+    Top = 366
+    Width = 336
     Align = alBottom
     BevelOuter = bvLowered
     ParentBackground = False
@@ -49,12 +48,12 @@ object QFCompilerRun: TQFCompilerRun
   object CBOS: TComboBox
     AnchorSideTop.Control = Label1
     AnchorSideTop.Side = asrBottom
-    Left = 16
-    Height = 36
-    Top = 64
-    Width = 232
-    BorderSpacing.Top = 5
-    ItemHeight = 28
+    Left = 8
+    Height = 30
+    Top = 31
+    Width = 116
+    BorderSpacing.Top = 2
+    ItemHeight = 0
     ItemIndex = 0
     Items.Strings = (
       'linux'
@@ -67,31 +66,31 @@ object QFCompilerRun: TQFCompilerRun
     OnChange = CBCPUChange
   end
   object Label1: TLabel
-    Left = 16
-    Height = 28
-    Top = 31
-    Width = 41
+    Left = 8
+    Height = 13
+    Top = 16
+    Width = 20
     Caption = 'OS:'
   end
   object Label2: TLabel
     AnchorSideTop.Control = CBOS
     AnchorSideTop.Side = asrBottom
-    Left = 16
-    Height = 28
-    Top = 120
-    Width = 77
-    BorderSpacing.Top = 20
+    Left = 8
+    Height = 18
+    Top = 71
+    Width = 39
+    BorderSpacing.Top = 10
     Caption = 'CPU：'
   end
   object CBCPU: TComboBox
     AnchorSideTop.Control = Label2
     AnchorSideTop.Side = asrBottom
-    Left = 16
-    Height = 36
-    Top = 153
-    Width = 232
-    BorderSpacing.Top = 5
-    ItemHeight = 28
+    Left = 8
+    Height = 30
+    Top = 91
+    Width = 116
+    BorderSpacing.Top = 2
+    ItemHeight = 0
     ItemIndex = 0
     Items.Strings = (
       'aarch64'
@@ -108,21 +107,21 @@ object QFCompilerRun: TQFCompilerRun
   end
   object Label3: TLabel
     AnchorSideTop.Control = Label1
-    Left = 280
-    Height = 28
-    Top = 31
-    Width = 179
+    Left = 140
+    Height = 13
+    Top = 16
+    Width = 89
     Caption = 'OS Sub options:'
   end
   object CBSUBCPUOS: TComboBox
     AnchorSideTop.Control = Label3
     AnchorSideTop.Side = asrBottom
-    Left = 280
-    Height = 36
-    Top = 64
-    Width = 368
-    BorderSpacing.Top = 5
-    ItemHeight = 28
+    Left = 140
+    Height = 30
+    Top = 31
+    Width = 184
+    BorderSpacing.Top = 2
+    ItemHeight = 0
     Style = csDropDownList
     TabOrder = 4
     OnChange = CBSUBCPUOSChange
@@ -130,21 +129,21 @@ object QFCompilerRun: TQFCompilerRun
   object Label4: TLabel
     AnchorSideTop.Control = CBCPU
     AnchorSideTop.Side = asrBottom
-    Left = 16
-    Height = 28
-    Top = 209
-    Width = 191
-    BorderSpacing.Top = 20
+    Left = 8
+    Height = 13
+    Top = 131
+    Width = 95
+    BorderSpacing.Top = 10
     Caption = 'TargetFileName:'
   end
   object Edit1: TEdit
     AnchorSideTop.Control = Label4
     AnchorSideTop.Side = asrBottom
-    Left = 16
-    Height = 36
-    Top = 242
-    Width = 638
-    BorderSpacing.Top = 5
+    Left = 8
+    Height = 35
+    Top = 146
+    Width = 319
+    BorderSpacing.Top = 2
     ParentShowHint = False
     ShowHint = True
     TabOrder = 5
@@ -152,21 +151,21 @@ object QFCompilerRun: TQFCompilerRun
   end
   object Label5: TLabel
     AnchorSideTop.Control = Label2
-    Left = 280
-    Height = 28
-    Top = 120
-    Width = 137
+    Left = 140
+    Height = 13
+    Top = 71
+    Width = 67
     Caption = 'Build Mode:'
   end
   object ComboBox1: TComboBox
     AnchorSideTop.Control = CBCPU
     AnchorSideTop.Side = asrCenter
-    Left = 280
-    Height = 36
-    Top = 153
-    Width = 368
-    BorderSpacing.Top = 5
-    ItemHeight = 28
+    Left = 140
+    Height = 30
+    Top = 91
+    Width = 184
+    BorderSpacing.Top = 2
+    ItemHeight = 0
     ItemIndex = 0
     Items.Strings = (
       'debug'
@@ -178,10 +177,10 @@ object QFCompilerRun: TQFCompilerRun
   end
   object FastCompilerBtn: TButton
     AnchorSideTop.Control = btnRemoteDebug
-    Left = 356
-    Height = 67
-    Top = 298
-    Width = 298
+    Left = 178
+    Height = 34
+    Top = 191
+    Width = 149
     Caption = 'Fast Compiler'
     TabOrder = 7
     OnClick = FastCompilerBtnClick
@@ -189,13 +188,16 @@ object QFCompilerRun: TQFCompilerRun
   inline Memo1: TSynEdit
     AnchorSideTop.Control = CompilerSpecificversionBtn
     AnchorSideTop.Side = asrBottom
-    Left = 16
-    Height = 245
-    Top = 462
-    Width = 638
-    BorderSpacing.Top = 10
+    AnchorSideBottom.Control = pInfo
+    Left = 8
+    Height = 87
+    Top = 274
+    Width = 319
+    BorderSpacing.Top = 5
+    BorderSpacing.Bottom = 5
+    Anchors = [akTop, akLeft, akBottom]
     Font.CharSet = ANSI_CHARSET
-    Font.Height = -24
+    Font.Height = -12
     Font.Name = 'Courier New'
     Font.Pitch = fpFixed
     Font.Quality = fqDraft
@@ -204,7 +206,7 @@ object QFCompilerRun: TQFCompilerRun
     TabOrder = 8
     TabStop = False
     Gutter.Visible = False
-    Gutter.Width = 109
+    Gutter.Width = 55
     Gutter.MouseActions = <>
     RightGutter.Width = 0
     RightGutter.MouseActions = <>
@@ -653,7 +655,7 @@ object QFCompilerRun: TQFCompilerRun
     LineHighlightColor.Foreground = clNone
     inline SynLeftGutterPartList1: TSynGutterPartList
       object SynGutterMarks1: TSynGutterMarks
-        Width = 48
+        Width = 24
         MouseActions = <>
         MaxExtraMarksColums = 0
         Options = [sgmoDeDuplicateMarksOnOverflow]
@@ -661,7 +663,7 @@ object QFCompilerRun: TQFCompilerRun
         MarkupInfo.Foreground = clNone
       end
       object SynGutterLineNumber1: TSynGutterLineNumber
-        Width = 29
+        Width = 15
         MouseActions = <>
         MarkupInfo.Background = clBtnFace
         MarkupInfo.Foreground = clNone
@@ -671,7 +673,7 @@ object QFCompilerRun: TQFCompilerRun
         LeadingZeros = False
       end
       object SynGutterChanges1: TSynGutterChanges
-        Width = 8
+        Width = 4
         MouseActions = <>
         ModifiedColor = 59900
         SavedColor = clGreen
@@ -680,13 +682,12 @@ object QFCompilerRun: TQFCompilerRun
         MarkupInfo.FrameColor = 59900
       end
       object SynGutterSeparator1: TSynGutterSeparator
-        Width = 4
+        Width = 2
         MouseActions = <>
         MarkupInfo.Background = clWhite
         MarkupInfo.Foreground = clGray
       end
       object SynGutterCodeFolding1: TSynGutterCodeFolding
-        Width = 20
         MouseActions = <>
         MarkupInfo.Background = clNone
         MarkupInfo.Foreground = clGray
@@ -698,12 +699,12 @@ object QFCompilerRun: TQFCompilerRun
   object CompilerSpecificversionBtn: TButton
     AnchorSideTop.Control = btnRemoteDebug
     AnchorSideTop.Side = asrBottom
-    Left = 16
-    Height = 67
+    Left = 8
+    Height = 34
     Hint = '编译特定版本的libc，如：在高版本编译低版本的程序。'
-    Top = 385
-    Width = 638
-    BorderSpacing.Top = 20
+    Top = 235
+    Width = 319
+    BorderSpacing.Top = 10
     Caption = 'Compile a specific version of libc'
     ParentShowHint = False
     ShowHint = True

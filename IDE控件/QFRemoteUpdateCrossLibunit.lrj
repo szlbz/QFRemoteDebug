@@ -1,0 +1,19 @@
+{"version":1,"strings":[
+{"hash":156184100,"name":"tqfremoteupdatecrosslib.caption","sourcebytes":[81,70,85,112,100,97,116,101,32,67,114,111,115,115,32,76,105,98,114,97,114,121,32,65,115,115,105,115,116,97,110,116],"value":"QFUpdate Cross Library Assistant"},
+{"hash":203210580,"name":"tqfremoteupdatecrosslib.label4.caption","sourcebytes":[83,101,114,118,101,114,32,80,111,114,116],"value":"Server Port"},
+{"hash":188173683,"name":"tqfremoteupdatecrosslib.label5.caption","sourcebytes":[83,101,114,118,101,114,32,65,100,100,114,101,115,115],"value":"Server Address"},
+{"hash":242608,"name":"tqfremoteupdatecrosslib.eserverport.text","sourcebytes":[56,48,56,48],"value":"8080"},
+{"hash":169027393,"name":"tqfremoteupdatecrosslib.eserveraddr.text","sourcebytes":[49,50,55,46,48,46,48,46,49],"value":"127.0.0.1"},
+{"hash":102924166,"name":"tqfremoteupdatecrosslib.btnupdatelibrary.caption","sourcebytes":[230,155,180,230,150,176,228,186,164,229,143,137,231,188,150,232,175,145,108,105,98,230,150,135,228,187,182],"value":"\u66F4\u65B0\u4EA4\u53C9\u7F16\u8BD1lib\u6587\u4EF6"},
+{"hash":86477814,"name":"tqfremoteupdatecrosslib.label6.caption","sourcebytes":[76,97,98,101,108,54],"value":"Label6"},
+{"hash":86477815,"name":"tqfremoteupdatecrosslib.label7.caption","sourcebytes":[76,97,98,101,108,55],"value":"Label7"},
+{"hash":7538120,"name":"tqfremoteupdatecrosslib.cbos.text","sourcebytes":[108,105,110,117,120],"value":"linux"},
+{"hash":21610,"name":"tqfremoteupdatecrosslib.label1.caption","sourcebytes":[79,83,58],"value":"OS:"},
+{"hash":75909978,"name":"tqfremoteupdatecrosslib.label2.caption","sourcebytes":[67,80,85,239,188,154],"value":"CPU\uFF1A"},
+{"hash":126393332,"name":"tqfremoteupdatecrosslib.cbcpu.text","sourcebytes":[97,97,114,99,104,54,52],"value":"aarch64"},
+{"hash":33904218,"name":"tqfremoteupdatecrosslib.label3.caption","sourcebytes":[79,83,32,83,117,98,32,111,112,116,105,111,110,115,58],"value":"OS Sub options:"},
+{"hash":263099104,"name":"tqfremoteupdatecrosslib.edit1.hint","sourcebytes":[229,190,133,230,183,187,229,138,160,231,154,132,108,105,98,231,155,174,229,189,149,229,144,141,231,167,176],"value":"\u5F85\u6DFB\u52A0\u7684lib\u76EE\u5F55\u540D\u79F0"},
+{"hash":67224032,"name":"tqfremoteupdatecrosslib.edit1.texthint","sourcebytes":[229,190,133,230,183,187,229,138,160,108,105,98,231,155,174,229,189,149,229,144,141,231,167,176],"value":"\u5F85\u6DFB\u52A0lib\u76EE\u5F55\u540D\u79F0"},
+{"hash":37187365,"name":"tqfremoteupdatecrosslib.button1.caption","sourcebytes":[230,183,187,229,138,160,231,155,174,229,189,149],"value":"\u6DFB\u52A0\u76EE\u5F55"},
+{"hash":67224032,"name":"tqfremoteupdatecrosslib.label8.caption","sourcebytes":[229,190,133,230,183,187,229,138,160,108,105,98,231,155,174,229,189,149,229,144,141,231,167,176],"value":"\u5F85\u6DFB\u52A0lib\u76EE\u5F55\u540D\u79F0"}
+]}

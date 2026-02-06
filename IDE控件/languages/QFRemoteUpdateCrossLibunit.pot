@@ -1,0 +1,53 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: qfremoteupdatecrosslibunit.adddirectory
+msgid "Add Directory"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.btnremotedebughint
+msgid "Compile the current project/upload and run the current project for debugging"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.btnupdatelibrarycaption
+msgid "Update cross-compiled lib file"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.edit1hint
+msgid "Name  lib directory to be added"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.formcaption
+msgctxt "qfremoteupdatecrosslibunit.formcaption"
+msgid "QFUpdate Cross Lib Assistant"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.menuitemcaption
+msgctxt "qfremoteupdatecrosslibunit.menuitemcaption"
+msgid "QFUpdate Cross Lib Assistant"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.modifycpu
+msgid "Modify CPU"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.namelibdirectoryadded
+msgid "Name lib directory to be added"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.ossuboptions
+msgid "OS Sub options"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.remotedebug
+msgid "Remote Debug"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.serveraddress
+msgid "Server Address"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.serverport
+msgid "Server Port"
+msgstr ""
+

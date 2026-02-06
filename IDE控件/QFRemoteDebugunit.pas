@@ -8,6 +8,7 @@ uses
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, rtcDataCli, rtcInfo, rtcConn, rtcHttpCli, StdCtrls, ExtCtrls, IniFiles,
   rtcSystem, rtcCliModule,
+  DefaultTranslator,
   //IDE 调试助手需要用到的单元
   DefineTemplates, CompOptsIntf, TransferMacros,
   LCLProc, BaseIDEIntf, ProjectIntf, LazConfigStorage,
@@ -72,13 +73,35 @@ var
   QFRemoteDebug: TQFRemoteDebug;
   QFRemoteDebugCreator: TIDEWindowCreator;
 
+resourcestring
+  ServerAddress = 'Server Address';
+  ServerPort = 'Server Port';
+  OSSuboptions = 'OS Sub options';
+  ModifyCPU = 'Modify CPU';
+  RemoteDebug = 'Remote Debug';
+  formcaption= 'QFRemoteDebug Assistant';
+  btnRemoteDebugHint = 'Compile the current project/upload and run the current project for debugging';//'编译当前project/上传及运行当前project进行调试';
+  MenuItemCaption = 'QFRemoteDebug Assistant';
+
 procedure ShowQFRemoteDebug(Sender: TObject);
 procedure Register;
 
 implementation
 
 {$R *.lfm}
-{$i tools.inc}
+
+function SetDirSeparatorsEx( FileName : String):String;
+Var I : longint;
+
+begin
+  Result:=FileName;
+  For I:=1 to Length(FileName) do
+  begin
+    if (FileName[I]='/') or (FileName[I]='\') then
+      FileName[i]:=DirectorySeparator;
+  end;
+  Result:=FileName;
+end;
 
 //dock windows用
 procedure CreateQFRemoteDebug(Sender: TObject; aFormName: string;
@@ -108,11 +131,11 @@ procedure Register;
 var
   CmdCatToolMenu: TIDECommandCategory;
   ToolQFRemoteDebugCommand: TIDECommand;
-  MenuItemCaption: String;
+  //MenuItemCaption: String;
   MenuCommand: TIDEMenuCommand;
 begin
   // register shortcut and menu item
-  MenuItemCaption:='QFRemoteDebug Assistant';//'远程调试助手'; // <- this caption should be replaced by a resourcestring
+  //MenuItemCaption:=MenuItemCaption;//'QFRemoteDebug Assistant';//'远程调试助手'; // <- this caption should be replaced by a resourcestring
   // search shortcut category
   CmdCatToolMenu:=IDECommandList.FindCategoryByName(CommandCategoryCustomName);//CommandCategoryToolMenuName);
   // register shortcut
@@ -379,6 +402,14 @@ procedure TQFRemoteDebug.FormCreate(Sender: TObject);
 var
   ini:TIniFile;
 begin
+  Self.Caption:=formcaption;
+  Label5.Caption:=ServerAddress;
+  Label4.Caption:=ServerPort;
+  Label3.Caption:=OSSuboptions;
+  BtSaveConfig.Caption:=ModifyCPU;
+  btnRemoteDebug.Caption:=RemoteDebug;
+  btnRemoteDebug.Hint:=btnRemoteDebugHint;
+
   ini:=TIniFile.Create(SetDirSeparatorsEx(LazarusIDE.GetPrimaryConfigPath+'\RemoteDebugConfig.ini'));
   eServerAddr.Text:=ini.ReadString('参数','ip','');
   eServerPort.Text:=ini.ReadString('参数','port','8080');
