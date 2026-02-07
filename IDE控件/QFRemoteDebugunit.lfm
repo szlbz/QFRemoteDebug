@@ -1,19 +1,18 @@
 object QFRemoteDebug: TQFRemoteDebug
   Left = 309
-  Height = 538
+  Height = 269
   Top = 203
-  Width = 632
+  Width = 316
   ActiveControl = btnRemoteDebug
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = 'QFRemoteDebug Assistant'
-  ClientHeight = 538
-  ClientWidth = 632
+  ClientHeight = 269
+  ClientWidth = 316
   Color = clBtnFace
-  DesignTimePPI = 192
   Font.CharSet = ANSI_CHARSET
   Font.Color = clBlack
-  Font.Height = -24
+  Font.Height = -12
   Font.Name = 'Century'
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
@@ -23,32 +22,32 @@ object QFRemoteDebug: TQFRemoteDebug
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   object Label4: TLabel
-    Left = 324
+    Left = 162
     Height = 28
-    Top = 20
+    Top = 10
     Width = 129
     Caption = 'Server Port'
   end
   object Label5: TLabel
-    Left = 16
+    Left = 8
     Height = 28
-    Top = 20
+    Top = 10
     Width = 171
     Caption = 'Server Address'
   end
   object eServerPort: TEdit
-    Left = 324
+    Left = 162
     Height = 36
-    Top = 60
-    Width = 180
+    Top = 30
+    Width = 90
     TabOrder = 1
     Text = '8080'
   end
   object eServerAddr: TEdit
-    Left = 16
+    Left = 8
     Height = 36
-    Top = 60
-    Width = 284
+    Top = 30
+    Width = 142
     TabOrder = 0
     Text = '127.0.0.1'
     OnExit = eServerAddrExit
@@ -56,12 +55,12 @@ object QFRemoteDebug: TQFRemoteDebug
   object btnRemoteDebug: TButton
     AnchorSideTop.Control = CBCPU
     AnchorSideTop.Side = asrBottom
-    Left = 16
-    Height = 50
+    Left = 8
+    Height = 25
     Hint = '编译当前project/上传及运行当前project进行调试'
-    Top = 334
-    Width = 596
-    BorderSpacing.Top = 10
+    Top = 167
+    Width = 298
+    BorderSpacing.Top = 5
     Caption = 'Remote Debug'
     ParentShowHint = False
     ShowHint = True
@@ -70,8 +69,8 @@ object QFRemoteDebug: TQFRemoteDebug
   end
   object pInfo: TPanel
     Left = 0
-    Height = 44
-    Top = 494
+    Height = 22
+    Top = 516
     Width = 632
     Align = alBottom
     BevelOuter = bvLowered
@@ -82,26 +81,26 @@ object QFRemoteDebug: TQFRemoteDebug
     AnchorSideLeft.Control = eServerAddr
     AnchorSideTop.Control = eServerAddr
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 28
-    Top = 106
+    Top = 53
     Width = 75
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 5
     Caption = 'Label8'
   end
   object Label9: TLabel
     AnchorSideLeft.Control = Label8
     AnchorSideTop.Control = Label8
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 28
-    Top = 144
+    Top = 72
     Width = 75
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 5
     Caption = 'Label9'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clRed
-    Font.Height = -24
+    Font.Height = -12
     Font.Name = 'Century'
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
@@ -110,11 +109,11 @@ object QFRemoteDebug: TQFRemoteDebug
   object CBOS: TComboBox
     AnchorSideTop.Control = Label1
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 36
-    Top = 214
-    Width = 176
-    BorderSpacing.Top = 4
+    Top = 107
+    Width = 88
+    BorderSpacing.Top = 2
     ItemHeight = 28
     ItemIndex = 0
     Items.Strings = (
@@ -130,32 +129,32 @@ object QFRemoteDebug: TQFRemoteDebug
   object Label1: TLabel
     AnchorSideTop.Control = Label9
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 28
-    Top = 182
+    Top = 91
     Width = 41
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 5
     Caption = 'OS:'
   end
   object Label2: TLabel
     AnchorSideLeft.Control = Label1
     AnchorSideTop.Control = CBOS
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 28
-    Top = 260
+    Top = 130
     Width = 77
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 5
     Caption = 'CPU：'
   end
   object CBCPU: TComboBox
     AnchorSideLeft.Control = Label1
     AnchorSideTop.Control = Label2
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 36
-    Top = 288
-    Width = 232
+    Top = 144
+    Width = 116
     ItemHeight = 28
     ItemIndex = 0
     Items.Strings = (
@@ -174,14 +173,14 @@ object QFRemoteDebug: TQFRemoteDebug
   object BtSaveConfig: TButton
     AnchorSideTop.Control = CBCPU
     AnchorSideTop.Side = asrCenter
-    Left = 272
-    Height = 50
-    Top = 281
-    Width = 192
+    Left = 136
+    Height = 25
+    Top = 140
+    Width = 96
     Caption = '修改CPU'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
-    Font.Height = -24
+    Font.Height = -12
     Font.Name = 'Century'
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
@@ -193,11 +192,11 @@ object QFRemoteDebug: TQFRemoteDebug
   object CBSUBCPUOS: TComboBox
     AnchorSideTop.Control = Label3
     AnchorSideTop.Side = asrBottom
-    Left = 240
+    Left = 120
     Height = 36
-    Top = 214
-    Width = 372
-    BorderSpacing.Top = 4
+    Top = 107
+    Width = 186
+    BorderSpacing.Top = 2
     ItemHeight = 28
     ItemIndex = 0
     Items.Strings = (
@@ -212,9 +211,9 @@ object QFRemoteDebug: TQFRemoteDebug
   end
   object Label3: TLabel
     AnchorSideTop.Control = Label1
-    Left = 240
+    Left = 120
     Height = 28
-    Top = 182
+    Top = 91
     Width = 179
     Caption = 'OS Sub options:'
   end
@@ -223,8 +222,8 @@ object QFRemoteDebug: TQFRemoteDebug
     ServerAddr = 'localhost'
     ServerPort = '80'
     AutoConnect = True
-    Left = 512
-    Top = 16
+    Left = 256
+    Top = 8
   end
   object RtcDataRequest1: TRtcDataRequest
     AutoSyncEvents = True
@@ -234,7 +233,7 @@ object QFRemoteDebug: TQFRemoteDebug
     OnDataOut = RtcDataRequest1DataOut
     OnDataIn = RtcDataRequest1DataIn
     OnDataSent = RtcDataRequest1DataSent
-    Left = 512
-    Top = 112
+    Left = 256
+    Top = 56
   end
 end

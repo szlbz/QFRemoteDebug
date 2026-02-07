@@ -90,6 +90,11 @@ resourcestring
   AddDirectory = 'Add Directory';
   btnUpdateLibraryCaption = 'Update cross-compiled lib file';
   edit1hint = 'Name  lib directory to be added';
+  info1 = 'Update cross-compiled lib';//'更新交叉编译lib';
+  info2 = 'Confirm to update cross-compilation';//'确定要更新交叉编译';
+  info3 = 'lib file?';//'lib文件？';
+  info4 = 'Windows programs do not require updating the lib file!';//'windows程序不需要更新lib文件！';
+  info5 = 'download';//'下载';
 
 procedure ShowQFRemoteUpdateCrossLib(Sender: TObject);
 procedure Register;
@@ -234,7 +239,8 @@ end;
 
 procedure TQFRemoteUpdateCrossLib.btnUpdateLibraryClick(Sender: TObject);
 begin
-  if MessageDlg('更新交叉编译lib','确定要更新交叉编译'+CBSUBCPUOS.Text+'lib文件？',mtConfirmation,mbYesNo,'')=mrYes then
+  if MessageDlg(info1,info2+CBSUBCPUOS.Text+info3,mtConfirmation,mbYesNo,'')=mrYes then
+  //if MessageDlg('更新交叉编译lib','确定要更新交叉编译'+CBSUBCPUOS.Text+'lib文件？',mtConfirmation,mbYesNo,'')=mrYes then
   begin
     TargetCPUOS:=CBSUBCPUOS.Text;
     if pos('win',TargetCPUOS)<=0 then
@@ -260,7 +266,8 @@ begin
       btnUpdateLibrary.Enabled:=True;
     end
     else
-      ShowMessage('windows程序不需要更新lib文件！');
+      ShowMessage(info4);
+      //ShowMessage('windows程序不需要更新lib文件！');
   end;
 end;
 
@@ -371,14 +378,14 @@ begin
       if Response.ContentLength > 0 then
       begin
         pInfo.Caption :=Format('%s: %d%% (%.1f/%.1f MB)',
-        ['下载',
+        [info5,
         round((ContentIn / Response.ContentLength) * 100),
         ContentIn/1024/1024,
         Response.ContentLength /1024 /1024]);
       end
       else
       begin
-        pInfo.Caption := '下载:' + IntToStr(ContentIn) +
+        pInfo.Caption := info5+':' + IntToStr(ContentIn) +
           ' bytes received';
       end;
     end;

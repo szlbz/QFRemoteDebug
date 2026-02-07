@@ -82,6 +82,8 @@ resourcestring
   formcaption= 'QFRemoteDebug Assistant';
   btnRemoteDebugHint = 'Compile the current project/upload and run the current project for debugging';//'编译当前project/上传及运行当前project进行调试';
   MenuItemCaption = 'QFRemoteDebug Assistant';
+  info1 = 'Create a new project, save the project before using.';//'新建project，先保存project再使用。';
+  downloads ='download:';
 
 procedure ShowQFRemoteDebug(Sender: TObject);
 procedure Register;
@@ -301,7 +303,8 @@ begin
   end
   else
   begin
-    ShowMessage('新建project，先保存project再使用。');
+    ShowMessage(info1);
+    //ShowMessage('新建project，先保存project再使用。');
     btnRemoteDebug.Enabled:=False;
   end;
 end;
@@ -391,7 +394,8 @@ begin
   end
   else
   begin
-    ShowMessage('新建project，先保存project再使用。');
+    ShowMessage(info1);
+    //ShowMessage('新建project，先保存project再使用。');
     btnRemoteDebug.Enabled:=False;
   end;
   LazarusIDE.DoSaveAll([sfProjectSaving]);  //保存
@@ -437,13 +441,13 @@ begin
       ContentIn:=Response.ContentIn;
       if Response.ContentLength > 0 then
       begin
-        pInfo.Caption := '下载:' + IntToStr(ContentIn) + '/' +
+        pInfo.Caption := downloads + IntToStr(ContentIn) + '/' +
           IntToStr(Response.ContentLength) + ' [' +
           IntToStr(round(ContentIn / Response.ContentLength * 100)) + '%]';
       end
       else
       begin
-        pInfo.Caption := '下载:' + IntToStr(ContentIn) +
+        pInfo.Caption := downloads + IntToStr(ContentIn) +
           ' bytes received';
       end;
     end;

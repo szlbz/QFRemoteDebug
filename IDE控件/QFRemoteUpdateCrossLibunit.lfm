@@ -1,18 +1,17 @@
 object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   Left = 309
-  Height = 640
+  Height = 320
   Top = 203
-  Width = 714
+  Width = 357
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = 'QFUpdate Cross Library Assistant'
-  ClientHeight = 640
-  ClientWidth = 714
+  ClientHeight = 320
+  ClientWidth = 357
   Color = clBtnFace
-  DesignTimePPI = 192
   Font.CharSet = ANSI_CHARSET
   Font.Color = clBlack
-  Font.Height = -24
+  Font.Height = -12
   Font.Name = 'Century'
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
@@ -22,39 +21,39 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   object Label4: TLabel
-    Left = 324
+    Left = 162
     Height = 28
-    Top = 20
+    Top = 10
     Width = 129
     Caption = 'Server Port'
   end
   object Label5: TLabel
-    Left = 16
+    Left = 8
     Height = 28
-    Top = 20
+    Top = 10
     Width = 171
     Caption = 'Server Address'
   end
   object eServerPort: TEdit
-    Left = 324
+    Left = 162
     Height = 36
-    Top = 60
-    Width = 188
+    Top = 30
+    Width = 94
     TabOrder = 1
     Text = '8080'
   end
   object eServerAddr: TEdit
-    Left = 16
+    Left = 8
     Height = 36
-    Top = 60
-    Width = 284
+    Top = 30
+    Width = 142
     TabOrder = 0
     Text = '127.0.0.1'
   end
   object pInfo: TPanel
     Left = 0
-    Height = 44
-    Top = 596
+    Height = 22
+    Top = 618
     Width = 714
     Align = alBottom
     BevelOuter = bvLowered
@@ -64,12 +63,12 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   object btnUpdateLibrary: TButton
     AnchorSideTop.Control = Button1
     AnchorSideTop.Side = asrBottom
-    Left = 16
-    Height = 58
-    Top = 401
-    Width = 680
+    Left = 8
+    Height = 29
+    Top = 200
+    Width = 697
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 20
+    BorderSpacing.Top = 10
     Caption = '更新交叉编译lib文件'
     TabOrder = 2
     OnClick = btnUpdateLibraryClick
@@ -77,31 +76,31 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   object Label6: TLabel
     AnchorSideTop.Control = btnUpdateLibrary
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 28
-    Top = 469
+    Top = 234
     Width = 75
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 5
     Caption = 'Label6'
   end
   object Label7: TLabel
     AnchorSideTop.Control = Label6
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 28
-    Top = 507
+    Top = 254
     Width = 75
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 5
     Caption = 'Label7'
   end
   object CBOS: TComboBox
     AnchorSideTop.Control = Label1
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 36
-    Top = 176
-    Width = 232
-    BorderSpacing.Top = 4
+    Top = 88
+    Width = 116
+    BorderSpacing.Top = 2
     ItemHeight = 28
     ItemIndex = 0
     Items.Strings = (
@@ -115,9 +114,9 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     OnChange = CBOSChange
   end
   object Label1: TLabel
-    Left = 16
+    Left = 8
     Height = 28
-    Top = 144
+    Top = 72
     Width = 41
     Caption = 'OS:'
   end
@@ -125,22 +124,22 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     AnchorSideLeft.Control = Label1
     AnchorSideTop.Control = CBOS
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 28
-    Top = 222
+    Top = 111
     Width = 77
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 5
     Caption = 'CPU：'
   end
   object CBCPU: TComboBox
     AnchorSideLeft.Control = Label1
     AnchorSideTop.Control = Label2
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 36
-    Top = 254
-    Width = 232
-    BorderSpacing.Top = 4
+    Top = 127
+    Width = 116
+    BorderSpacing.Top = 2
     ItemHeight = 28
     ItemIndex = 0
     Items.Strings = (
@@ -159,12 +158,12 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   object CBSUBCPUOS: TComboBox
     AnchorSideTop.Control = Label3
     AnchorSideTop.Side = asrBottom
-    Left = 264
+    Left = 132
     Height = 36
-    Top = 176
-    Width = 432
+    Top = 88
+    Width = 573
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 4
+    BorderSpacing.Top = 2
     ItemHeight = 28
     Style = csDropDownList
     TabOrder = 6
@@ -172,21 +171,21 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   end
   object Label3: TLabel
     AnchorSideTop.Control = Label1
-    Left = 264
+    Left = 132
     Height = 28
-    Top = 144
+    Top = 72
     Width = 179
     Caption = 'OS Sub options:'
   end
   object Edit1: TEdit
     AnchorSideTop.Control = Label8
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 36
     Hint = '待添加的lib目录名称'
-    Top = 338
-    Width = 456
-    BorderSpacing.Top = 5
+    Top = 169
+    Width = 228
+    BorderSpacing.Top = 2
     ParentShowHint = False
     ShowHint = True
     TabOrder = 7
@@ -195,10 +194,10 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   object Button1: TButton
     AnchorSideTop.Control = Edit1
     AnchorSideTop.Side = asrCenter
-    Left = 480
-    Height = 50
-    Top = 331
-    Width = 216
+    Left = 240
+    Height = 25
+    Top = 166
+    Width = 465
     Anchors = [akTop, akLeft, akRight]
     Caption = '添加目录'
     TabOrder = 8
@@ -207,11 +206,11 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   object Label8: TLabel
     AnchorSideTop.Control = CBCPU
     AnchorSideTop.Side = asrBottom
-    Left = 16
+    Left = 8
     Height = 28
-    Top = 305
+    Top = 152
     Width = 197
-    BorderSpacing.Top = 15
+    BorderSpacing.Top = 8
     Caption = '待添加lib目录名称'
   end
   object RtcHttpClient1: TRtcHttpClient
@@ -219,8 +218,8 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     ServerAddr = 'localhost'
     ServerPort = '80'
     AutoConnect = True
-    Left = 512
-    Top = 16
+    Left = 256
+    Top = 8
   end
   object RtcDataRequest1: TRtcDataRequest
     AutoSyncEvents = True
@@ -230,7 +229,7 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     OnDataOut = RtcDataRequest1DataOut
     OnDataIn = RtcDataRequest1DataIn
     OnDataSent = RtcDataRequest1DataSent
-    Left = 512
-    Top = 112
+    Left = 256
+    Top = 56
   end
 end

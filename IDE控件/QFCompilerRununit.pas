@@ -86,7 +86,9 @@ resourcestring
   FCompilerSpecificversionBtn ='Compile a specific version of libc';
   FCompilerSpecificversionBtnhint = 'Compile a specific version of libc, such as compiling a lower version of a program from a higher version.';//'编译特定版本的libc，如：在高版本编译低版本的程序。';
   TargetFileName = 'TargetFileName';
-
+  info1 = 'Create a new project, save the project before using.';//'新建project，先保存project再使用。';
+  Compilationerror = 'Compilation error!';
+  Compilationsuccessful = 'Compilation successful!';
 
 procedure ShowQFCompilerRun(Sender: TObject);
 procedure Register;
@@ -306,7 +308,8 @@ begin
   end
   else
   begin
-    ShowMessage('新建project，先保存project再使用。');
+    ShowMessage(info1);
+    //ShowMessage('新建project，先保存project再使用。');
     btnRemoteDebug.Enabled:=False;
   end;
 end;
@@ -428,10 +431,12 @@ begin
       end;
       if Process.ExitCode<>0 then
       begin
-        Memo1.Lines.Add('编译出错!');
+        Memo1.Lines.Add(Compilationerror);
+        //Memo1.Lines.Add('编译出错!');
       end
       else
-         Memo1.Lines.Add('编译成功！');
+        Memo1.Lines.Add(Compilationsuccessful);
+        //Memo1.Lines.Add('编译成功！');
       Memo1.CaretX:=0;
       Memo1.CaretY:=Memo1.Lines.Count;
       Application.ProcessMessages;
@@ -585,10 +590,12 @@ begin
       end;
       if Process.ExitCode<>0 then
       begin
-        Memo1.Lines.Add('编译出错!');
+        //Memo1.Lines.Add('编译出错!'); Compilationerror
+        Memo1.Lines.Add(Compilationerror);
       end
       else
-         Memo1.Lines.Add('编译成功！');
+        Memo1.Lines.Add(Compilationsuccessful);
+         //Memo1.Lines.Add('编译成功！');
       Memo1.CaretX:=0;
       Memo1.CaretY:=Memo1.Lines.Count;
       Application.ProcessMessages;
@@ -690,7 +697,8 @@ begin
   end
   else
   begin
-    ShowMessage('新建project，先保存project再使用。');
+    ShowMessage(info1);
+    //ShowMessage('新建project，先保存project再使用。');
     btnRemoteDebug.Enabled:=False;
   end;
   LazarusIDE.DoSaveAll([sfProjectSaving]);  //保存
@@ -726,7 +734,8 @@ begin
   end
   else
   begin
-    ShowMessage('新建project，先保存project再使用。');
+    ShowMessage(info1);
+    //ShowMessage('新建project，先保存project再使用。');
     btnRemoteDebug.Enabled:=False;
   end;
   Config.Free;
