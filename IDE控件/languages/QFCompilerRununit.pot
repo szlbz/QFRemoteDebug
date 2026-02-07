@@ -5,6 +5,14 @@ msgstr "Content-Type: text/plain; charset=UTF-8"
 msgid "Build Mode"
 msgstr ""
 
+#: qfcompilerrununit.compilationerror
+msgid "Compilation error!"
+msgstr ""
+
+#: qfcompilerrununit.compilationsuccessful
+msgid "Compilation successful!"
+msgstr ""
+
 #: qfcompilerrununit.fbtnremotedebug
 msgid "Compiler / Run"
 msgstr ""
@@ -28,6 +36,10 @@ msgstr ""
 #: qfcompilerrununit.formcaption
 msgctxt "qfcompilerrununit.formcaption"
 msgid "QFCompilerRun Assistant"
+msgstr ""
+
+#: qfcompilerrununit.info1
+msgid "Create a new project, save the project before using."
 msgstr ""
 
 #: qfcompilerrununit.menuitemcaption

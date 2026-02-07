@@ -19,10 +19,18 @@ msgstr ""
 msgid "Compile the current project/upload and run the current project for debugging"
 msgstr "编译当前project/上传及运行当前project进行调试"
 
+#: qfremotedebugunit.downloads
+msgid "download:"
+msgstr "下载:"
+
 #: qfremotedebugunit.formcaption
 msgctxt "qfremotedebugunit.formcaption"
 msgid "QFRemoteDebug Assistant"
 msgstr "QF远程调试助手"
+
+#: qfremotedebugunit.info1
+msgid "Create a new project, save the project before using."
+msgstr "新建project，先保存project再使用。"
 
 #: qfremotedebugunit.menuitemcaption
 msgctxt "qfremotedebugunit.menuitemcaption"

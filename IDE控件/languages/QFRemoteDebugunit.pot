@@ -5,9 +5,17 @@ msgstr "Content-Type: text/plain; charset=UTF-8"
 msgid "Compile the current project/upload and run the current project for debugging"
 msgstr ""
 
+#: qfremotedebugunit.downloads
+msgid "download:"
+msgstr ""
+
 #: qfremotedebugunit.formcaption
 msgctxt "qfremotedebugunit.formcaption"
 msgid "QFRemoteDebug Assistant"
+msgstr ""
+
+#: qfremotedebugunit.info1
+msgid "Create a new project, save the project before using."
 msgstr ""
 
 #: qfremotedebugunit.menuitemcaption

@@ -19,6 +19,14 @@ msgstr ""
 msgid "Build Mode"
 msgstr "编译模式"
 
+#: qfcompilerrununit.compilationerror
+msgid "Compilation error!"
+msgstr "编译出错!"
+
+#: qfcompilerrununit.compilationsuccessful
+msgid "Compilation successful!"
+msgstr "编译成功！"
+
 #: qfcompilerrununit.fbtnremotedebug
 msgid "Compiler / Run"
 msgstr "编译 / 运行"
@@ -43,6 +51,10 @@ msgstr "快速编译"
 msgctxt "qfcompilerrununit.formcaption"
 msgid "QFCompilerRun Assistant"
 msgstr "QF编译运行助手"
+
+#: qfcompilerrununit.info1
+msgid "Create a new project, save the project before using."
+msgstr "新建project，先保存project再使用。"
 
 #: qfcompilerrununit.menuitemcaption
 msgctxt "qfcompilerrununit.menuitemcaption"

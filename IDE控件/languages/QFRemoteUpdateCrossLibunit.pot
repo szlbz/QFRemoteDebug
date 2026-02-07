@@ -22,6 +22,26 @@ msgctxt "qfremoteupdatecrosslibunit.formcaption"
 msgid "QFUpdate Cross Lib Assistant"
 msgstr ""
 
+#: qfremoteupdatecrosslibunit.info1
+msgid "Update cross-compiled lib"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.info2
+msgid "Confirm to update cross-compilation"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.info3
+msgid "lib file?"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.info4
+msgid "Windows programs do not require updating the lib file!"
+msgstr ""
+
+#: qfremoteupdatecrosslibunit.info5
+msgid "download"
+msgstr ""
+
 #: qfremoteupdatecrosslibunit.menuitemcaption
 msgctxt "qfremoteupdatecrosslibunit.menuitemcaption"
 msgid "QFUpdate Cross Lib Assistant"

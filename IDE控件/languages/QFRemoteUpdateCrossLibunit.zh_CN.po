@@ -13,7 +13,7 @@ msgstr "添加目录"
 
 #: qfremoteupdatecrosslibunit.btnremotedebughint
 msgid "Compile the current project/upload and run the current project for debugging"
-msgstr ""
+msgstr "编译当前项目/上传并运行当前项目进行调试"
 
 #: qfremoteupdatecrosslibunit.btnupdatelibrarycaption
 msgid "Update cross-compiled lib file"
@@ -27,6 +27,26 @@ msgstr "待添加的lib目录名称"
 msgctxt "qfremoteupdatecrosslibunit.formcaption"
 msgid "QFUpdate Cross Lib Assistant"
 msgstr "QF更新交叉编译库助手"
+
+#: qfremoteupdatecrosslibunit.info1
+msgid "Update cross-compiled lib"
+msgstr "更新交叉编译lib"
+
+#: qfremoteupdatecrosslibunit.info2
+msgid "Confirm to update cross-compilation"
+msgstr "确定要更新交叉编译"
+
+#: qfremoteupdatecrosslibunit.info3
+msgid "lib file?"
+msgstr "lib文件？"
+
+#: qfremoteupdatecrosslibunit.info4
+msgid "Windows programs do not require updating the lib file!"
+msgstr "windows程序不需要更新lib文件！"
+
+#: qfremoteupdatecrosslibunit.info5
+msgid "download"
+msgstr "下载"
 
 #: qfremoteupdatecrosslibunit.menuitemcaption
 msgctxt "qfremoteupdatecrosslibunit.menuitemcaption"
