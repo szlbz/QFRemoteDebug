@@ -3,8 +3,7 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   Height = 320
   Top = 203
   Width = 357
-  BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsDialog
+  BorderIcons = [biSystemMenu]
   Caption = 'QFUpdate Cross Library Assistant'
   ClientHeight = 320
   ClientWidth = 357
@@ -16,27 +15,27 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
   Position = poScreenCenter
-  LCLVersion = '4.4.0.0'
+  LCLVersion = '4.6.0.0'
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   object Label4: TLabel
     Left = 162
-    Height = 28
+    Height = 13
     Top = 10
-    Width = 129
+    Width = 65
     Caption = 'Server Port'
   end
   object Label5: TLabel
     Left = 8
-    Height = 28
+    Height = 13
     Top = 10
-    Width = 171
+    Width = 86
     Caption = 'Server Address'
   end
   object eServerPort: TEdit
     Left = 162
-    Height = 36
+    Height = 35
     Top = 30
     Width = 94
     TabOrder = 1
@@ -44,7 +43,7 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   end
   object eServerAddr: TEdit
     Left = 8
-    Height = 36
+    Height = 35
     Top = 30
     Width = 142
     TabOrder = 0
@@ -53,8 +52,8 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   object pInfo: TPanel
     Left = 0
     Height = 22
-    Top = 618
-    Width = 714
+    Top = 298
+    Width = 357
     Align = alBottom
     BevelOuter = bvLowered
     ParentBackground = False
@@ -65,8 +64,8 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     AnchorSideTop.Side = asrBottom
     Left = 8
     Height = 29
-    Top = 200
-    Width = 697
+    Top = 240
+    Width = 340
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 10
     Caption = '更新交叉编译lib文件'
@@ -77,9 +76,9 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     AnchorSideTop.Control = btnUpdateLibrary
     AnchorSideTop.Side = asrBottom
     Left = 8
-    Height = 28
-    Top = 234
-    Width = 75
+    Height = 13
+    Top = 274
+    Width = 39
     BorderSpacing.Top = 5
     Caption = 'Label6'
   end
@@ -87,9 +86,9 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     AnchorSideTop.Control = Label6
     AnchorSideTop.Side = asrBottom
     Left = 8
-    Height = 28
-    Top = 254
-    Width = 75
+    Height = 13
+    Top = 292
+    Width = 39
     BorderSpacing.Top = 5
     Caption = 'Label7'
   end
@@ -97,11 +96,11 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     AnchorSideTop.Control = Label1
     AnchorSideTop.Side = asrBottom
     Left = 8
-    Height = 36
-    Top = 88
+    Height = 30
+    Top = 87
     Width = 116
     BorderSpacing.Top = 2
-    ItemHeight = 28
+    ItemHeight = 0
     ItemIndex = 0
     Items.Strings = (
       'linux'
@@ -115,9 +114,9 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   end
   object Label1: TLabel
     Left = 8
-    Height = 28
+    Height = 13
     Top = 72
-    Width = 41
+    Width = 20
     Caption = 'OS:'
   end
   object Label2: TLabel
@@ -125,9 +124,9 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     AnchorSideTop.Control = CBOS
     AnchorSideTop.Side = asrBottom
     Left = 8
-    Height = 28
-    Top = 111
-    Width = 77
+    Height = 18
+    Top = 122
+    Width = 39
     BorderSpacing.Top = 5
     Caption = 'CPU：'
   end
@@ -136,11 +135,11 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     AnchorSideTop.Control = Label2
     AnchorSideTop.Side = asrBottom
     Left = 8
-    Height = 36
-    Top = 127
+    Height = 30
+    Top = 142
     Width = 116
     BorderSpacing.Top = 2
-    ItemHeight = 28
+    ItemHeight = 0
     ItemIndex = 0
     Items.Strings = (
       'aarch64'
@@ -159,12 +158,12 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     AnchorSideTop.Control = Label3
     AnchorSideTop.Side = asrBottom
     Left = 132
-    Height = 36
-    Top = 88
-    Width = 573
+    Height = 30
+    Top = 87
+    Width = 216
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 2
-    ItemHeight = 28
+    ItemHeight = 0
     Style = csDropDownList
     TabOrder = 6
     OnChange = CBSUBCPUOSChange
@@ -172,18 +171,18 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   object Label3: TLabel
     AnchorSideTop.Control = Label1
     Left = 132
-    Height = 28
+    Height = 13
     Top = 72
-    Width = 179
+    Width = 89
     Caption = 'OS Sub options:'
   end
   object Edit1: TEdit
     AnchorSideTop.Control = Label8
     AnchorSideTop.Side = asrBottom
     Left = 8
-    Height = 36
+    Height = 35
     Hint = '待添加的lib目录名称'
-    Top = 169
+    Top = 200
     Width = 228
     BorderSpacing.Top = 2
     ParentShowHint = False
@@ -196,8 +195,8 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     AnchorSideTop.Side = asrCenter
     Left = 240
     Height = 25
-    Top = 166
-    Width = 465
+    Top = 205
+    Width = 108
     Anchors = [akTop, akLeft, akRight]
     Caption = '添加目录'
     TabOrder = 8
@@ -207,9 +206,9 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     AnchorSideTop.Control = CBCPU
     AnchorSideTop.Side = asrBottom
     Left = 8
-    Height = 28
-    Top = 152
-    Width = 197
+    Height = 18
+    Top = 180
+    Width = 99
     BorderSpacing.Top = 8
     Caption = '待添加lib目录名称'
   end

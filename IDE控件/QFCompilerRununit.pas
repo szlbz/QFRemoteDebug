@@ -5,7 +5,9 @@ unit QFCompilerRununit;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages,
+  //InterfaceBase, LCLPlatformDef,Project,
+  SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, rtcDataCli, rtcInfo, rtcConn, rtcHttpCli, StdCtrls, ExtCtrls, IniFiles,
   rtcSystem, rtcCliModule,
   DefaultTranslator,
@@ -19,7 +21,8 @@ uses
   FileUtil,
   IdeDebuggerOpts,
   IDECommands, IDEWindowIntf, LazIDEIntf, MenuIntf, SynEdit
-  , Types;
+  , Types
+  ;
 
 type
 
@@ -86,9 +89,7 @@ resourcestring
   FCompilerSpecificversionBtn ='Compile a specific version of libc';
   FCompilerSpecificversionBtnhint = 'Compile a specific version of libc, such as compiling a lower version of a program from a higher version.';//'编译特定版本的libc，如：在高版本编译低版本的程序。';
   TargetFileName = 'TargetFileName';
-  info1 = 'Create a new project, save the project before using.';//'新建project，先保存project再使用。';
-  Compilationerror = 'Compilation error!';
-  Compilationsuccessful = 'Compilation successful!';
+
 
 procedure ShowQFCompilerRun(Sender: TObject);
 procedure Register;
@@ -308,8 +309,7 @@ begin
   end
   else
   begin
-    ShowMessage(info1);
-    //ShowMessage('新建project，先保存project再使用。');
+    ShowMessage('新建project，先保存project再使用。');
     btnRemoteDebug.Enabled:=False;
   end;
 end;
@@ -326,6 +326,44 @@ var
   fpcpath:String;
   crossdir:String;
   TargetFilename:String;
+
+  //function MacroFuncProjVer(const Param: string): string;
+  //const
+  //  cParamNames: array of string = ['', 'major', 'minor', 'rev', 'build'];
+  //  cParamDefVals: array of string = ['0.0', '0', '0', '0', '0'];
+  //var
+  //  i: integer;
+  //begin
+  //  for i := 0 to high(cParamNames) do
+  //    if CompareText(Param, cParamNames[i]) = 0 then
+  //    begin
+  //      // check the project and whether the version is used
+  //      result := cParamDefVals[i];
+  //      if Project1 = nil then exit;
+  //      if Project1.ProjResources = nil then exit;
+  //      if Project1.ProjResources.VersionInfo = nil then exit;
+  //      if Project1.ProjResources.VersionInfo.UseVersionInfo = false then exit;
+  //
+  //      // return version or specified number
+  //      with Project1.ProjResources.VersionInfo do
+  //        case i of
+  //          1: exit(IntToStr(MajorVersionNr));
+  //          2: exit(IntToStr(MinorVersionNr));
+  //          3: exit(IntToStr(RevisionNr    ));
+  //          4: exit(IntToStr(BuildNr       ));
+  //        else
+  //          // return the full version number, discarding the zero revision and build
+  //          if BuildNr <> 0 then
+  //            exit(Format('%d_%d_%d_%d', [MajorVersionNr, MinorVersionNr, RevisionNr, BuildNr]))
+  //          else if RevisionNr <> 0 then
+  //            exit(Format('%d_%d_%d'   , [MajorVersionNr, MinorVersionNr, RevisionNr]))
+  //          else
+  //            exit(Format('%d_%d'      , [MajorVersionNr, MinorVersionNr]));
+  //        end;
+  //    end;
+  //  result := ''; // invalid parameter
+  //end;
+
 begin
   crossdir:=StringReplace(LazarusIDE.GetPrimaryConfigPath,'config_lazarus','',[]);
   crossdir:=SetDirSeparatorsEx(crossdir+'cross/lib/');
@@ -355,18 +393,20 @@ begin
         s:=path[i].Replace('-Fi','',[]);
         path2.Add(s);
       end;
-      if copy(Path[i],1,2)='-o' then //project或控件lib目录
-      begin
-        path[i]:=path[i].Replace('-o','',[]);
-        path[i]:=SetDirSeparatorsEx(ExtractFileDir(path[i])+'/');
-        TargetFilename:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetFilename;
-        if pos('_$(TargetCPU)', TargetFilename)>0 then
-           TargetFilename:=Copy(TargetFilename ,1,pos('_$(TargetCPU)', TargetFilename)-1);
-        if CBSUBCPUOS.Text<>'' then
-          path[i]:='-o'+path[i]+TargetFilename+'_'+CBSUBCPUOS.Text
-        else
-          path[i]:='-o'+path[i]+TargetFilename;
-      end;
+      //if copy(Path[i],1,2)='-o' then //project或控件lib目录
+      //begin
+      //  path[i]:=path[i].Replace('-o','',[]);
+      //  path[i]:=SetDirSeparatorsEx(ExtractFileDir(path[i])+'/');
+      //  TargetFilename:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetFilename;
+      //  if pos('_$(TargetCPU)', TargetFilename)>0 then
+      //     TargetFilename:=Copy(TargetFilename ,1,pos('_$(TargetCPU)', TargetFilename)-1);
+      //  if CBSUBCPUOS.Text<>'' then
+      //    path[i]:='-o'+path[i]+TargetFilename+'_'+CBSUBCPUOS.Text
+      //  else
+      //    path[i]:='-o'+path[i]+TargetFilename;
+      //  path[i]:=path[i].Replace('$(ProjVer)',MacroFuncProjVer(''));
+      //  path[i]:=path[i].Replace('$(LCLWidgetType)',GetLCLWidgetTypeName);
+      //end;
     end;
     cmd:=path.Text;
     if path2.Count>0 then
@@ -431,12 +471,10 @@ begin
       end;
       if Process.ExitCode<>0 then
       begin
-        Memo1.Lines.Add(Compilationerror);
-        //Memo1.Lines.Add('编译出错!');
+        Memo1.Lines.Add('编译出错!');
       end
       else
-        Memo1.Lines.Add(Compilationsuccessful);
-        //Memo1.Lines.Add('编译成功！');
+         Memo1.Lines.Add('编译成功！');
       Memo1.CaretX:=0;
       Memo1.CaretY:=Memo1.Lines.Count;
       Application.ProcessMessages;
@@ -590,12 +628,10 @@ begin
       end;
       if Process.ExitCode<>0 then
       begin
-        //Memo1.Lines.Add('编译出错!'); Compilationerror
-        Memo1.Lines.Add(Compilationerror);
+        Memo1.Lines.Add('编译出错!');
       end
       else
-        Memo1.Lines.Add(Compilationsuccessful);
-         //Memo1.Lines.Add('编译成功！');
+         Memo1.Lines.Add('编译成功！');
       Memo1.CaretX:=0;
       Memo1.CaretY:=Memo1.Lines.Count;
       Application.ProcessMessages;
@@ -697,8 +733,7 @@ begin
   end
   else
   begin
-    ShowMessage(info1);
-    //ShowMessage('新建project，先保存project再使用。');
+    ShowMessage('新建project，先保存project再使用。');
     btnRemoteDebug.Enabled:=False;
   end;
   LazarusIDE.DoSaveAll([sfProjectSaving]);  //保存
@@ -734,8 +769,7 @@ begin
   end
   else
   begin
-    ShowMessage(info1);
-    //ShowMessage('新建project，先保存project再使用。');
+    ShowMessage('新建project，先保存project再使用。');
     btnRemoteDebug.Enabled:=False;
   end;
   Config.Free;

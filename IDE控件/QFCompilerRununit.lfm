@@ -4,8 +4,7 @@ object QFCompilerRun: TQFCompilerRun
   Top = 203
   Width = 336
   ActiveControl = btnRemoteDebug
-  BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsDialog
+  BorderIcons = [biSystemMenu]
   Caption = 'Compiler / Run Tool'
   ClientHeight = 388
   ClientWidth = 336
@@ -17,7 +16,7 @@ object QFCompilerRun: TQFCompilerRun
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
   Position = poScreenCenter
-  LCLVersion = '4.4.0.0'
+  LCLVersion = '4.6.0.0'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   object btnRemoteDebug: TButton
@@ -46,13 +45,11 @@ object QFCompilerRun: TQFCompilerRun
     TabOrder = 1
   end
   object CBOS: TComboBox
-    AnchorSideTop.Control = Label1
-    AnchorSideTop.Side = asrBottom
+    AnchorSideTop.Control = CBSUBCPUOS
     Left = 8
     Height = 30
     Top = 31
     Width = 116
-    BorderSpacing.Top = 2
     ItemHeight = 0
     ItemIndex = 0
     Items.Strings = (
@@ -66,6 +63,8 @@ object QFCompilerRun: TQFCompilerRun
     OnChange = CBCPUChange
   end
   object Label1: TLabel
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrCenter
     Left = 8
     Height = 13
     Top = 16
@@ -106,7 +105,6 @@ object QFCompilerRun: TQFCompilerRun
     OnChange = CBCPUChange
   end
   object Label3: TLabel
-    AnchorSideTop.Control = Label1
     Left = 140
     Height = 13
     Top = 16
