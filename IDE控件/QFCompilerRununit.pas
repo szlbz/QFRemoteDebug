@@ -5,9 +5,7 @@ unit QFCompilerRununit;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, Messages,
-  //InterfaceBase, LCLPlatformDef,Project,
-  SysUtils, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, rtcDataCli, rtcInfo, rtcConn, rtcHttpCli, StdCtrls, ExtCtrls, IniFiles,
   rtcSystem, rtcCliModule,
   DefaultTranslator,
@@ -21,14 +19,14 @@ uses
   FileUtil,
   IdeDebuggerOpts,
   IDECommands, IDEWindowIntf, LazIDEIntf, MenuIntf, SynEdit
-  , Types
-  ;
+  , Types;
 
 type
 
   { TQFCompilerRun }
 
   TQFCompilerRun = class(TForm)
+    WidgetTypecbx: TComboBox;
     FastCompilerBtn: TButton;
     CBOS: TComboBox;
     CBCPU: TComboBox;
@@ -42,6 +40,7 @@ type
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
+    Label6: TLabel;
     pInfo: TPanel;
     Memo1: TSynEdit;
     procedure CompilerSpecificversionBtnClick(Sender: TObject);
@@ -297,7 +296,7 @@ begin
 
     if SetDirSeparatorsEx(eGDBFileName[Length(eGDBFileName)])<>SetDirSeparatorsEx('/') then
       eGDBFileName:=eGDBFileName+SetDirSeparatorsEx('/');
-    eGDBFileName:=SetDirSeparatorsEx(eGDBFileName+GetCompiledTargetCPU+'-'+GetCompiledTargetOS+
+    eGDBFileName:=SetDirSeparatorsEx(eGDBFileName+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+
       '/gdb/'+TargetCPUOS+'/gdb'{$ifdef windows}+'.exe'{$endif});
 
     Config.DeletePath('ProjectOptions/Debugger');
@@ -326,44 +325,6 @@ var
   fpcpath:String;
   crossdir:String;
   TargetFilename:String;
-
-  //function MacroFuncProjVer(const Param: string): string;
-  //const
-  //  cParamNames: array of string = ['', 'major', 'minor', 'rev', 'build'];
-  //  cParamDefVals: array of string = ['0.0', '0', '0', '0', '0'];
-  //var
-  //  i: integer;
-  //begin
-  //  for i := 0 to high(cParamNames) do
-  //    if CompareText(Param, cParamNames[i]) = 0 then
-  //    begin
-  //      // check the project and whether the version is used
-  //      result := cParamDefVals[i];
-  //      if Project1 = nil then exit;
-  //      if Project1.ProjResources = nil then exit;
-  //      if Project1.ProjResources.VersionInfo = nil then exit;
-  //      if Project1.ProjResources.VersionInfo.UseVersionInfo = false then exit;
-  //
-  //      // return version or specified number
-  //      with Project1.ProjResources.VersionInfo do
-  //        case i of
-  //          1: exit(IntToStr(MajorVersionNr));
-  //          2: exit(IntToStr(MinorVersionNr));
-  //          3: exit(IntToStr(RevisionNr    ));
-  //          4: exit(IntToStr(BuildNr       ));
-  //        else
-  //          // return the full version number, discarding the zero revision and build
-  //          if BuildNr <> 0 then
-  //            exit(Format('%d_%d_%d_%d', [MajorVersionNr, MinorVersionNr, RevisionNr, BuildNr]))
-  //          else if RevisionNr <> 0 then
-  //            exit(Format('%d_%d_%d'   , [MajorVersionNr, MinorVersionNr, RevisionNr]))
-  //          else
-  //            exit(Format('%d_%d'      , [MajorVersionNr, MinorVersionNr]));
-  //        end;
-  //    end;
-  //  result := ''; // invalid parameter
-  //end;
-
 begin
   crossdir:=StringReplace(LazarusIDE.GetPrimaryConfigPath,'config_lazarus','',[]);
   crossdir:=SetDirSeparatorsEx(crossdir+'cross/lib/');
@@ -393,20 +354,18 @@ begin
         s:=path[i].Replace('-Fi','',[]);
         path2.Add(s);
       end;
-      //if copy(Path[i],1,2)='-o' then //project或控件lib目录
-      //begin
-      //  path[i]:=path[i].Replace('-o','',[]);
-      //  path[i]:=SetDirSeparatorsEx(ExtractFileDir(path[i])+'/');
-      //  TargetFilename:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetFilename;
-      //  if pos('_$(TargetCPU)', TargetFilename)>0 then
-      //     TargetFilename:=Copy(TargetFilename ,1,pos('_$(TargetCPU)', TargetFilename)-1);
-      //  if CBSUBCPUOS.Text<>'' then
-      //    path[i]:='-o'+path[i]+TargetFilename+'_'+CBSUBCPUOS.Text
-      //  else
-      //    path[i]:='-o'+path[i]+TargetFilename;
-      //  path[i]:=path[i].Replace('$(ProjVer)',MacroFuncProjVer(''));
-      //  path[i]:=path[i].Replace('$(LCLWidgetType)',GetLCLWidgetTypeName);
-      //end;
+      if copy(Path[i],1,2)='-o' then //project或控件lib目录
+      begin
+        path[i]:=path[i].Replace('-o','',[]);
+        path[i]:=SetDirSeparatorsEx(ExtractFileDir(path[i])+'/');
+        TargetFilename:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetFilename;
+        if pos('_$(TargetCPU)', TargetFilename)>0 then
+           TargetFilename:=Copy(TargetFilename ,1,pos('_$(TargetCPU)', TargetFilename)-1);
+        if CBSUBCPUOS.Text<>'' then
+          path[i]:='-o'+path[i]+TargetFilename+'_'+CBSUBCPUOS.Text
+        else
+          path[i]:='-o'+path[i]+TargetFilename;
+      end;
     end;
     cmd:=path.Text;
     if path2.Count>0 then
@@ -647,6 +606,8 @@ procedure TQFCompilerRun.CBCPUChange(Sender: TObject);
 begin
   GetCrossLibList;
   CBSUBCPUOSChange(Self);
+  if copy(CBOS.Text,1,3)='win' then
+    WidgetTypecbx.Text:='';
 end;
 
 procedure TQFCompilerRun.CBSUBCPUOSChange(Sender: TObject);
@@ -657,16 +618,18 @@ begin
   TargetFile:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetFilename;
   if pos('$(TargetCPU)',TargetFile)>0 then
     TargetFile:=copy(TargetFile,1,pos('$(TargetCPU)',TargetFile)-2);
-
+  TargetFile:=TargetFile.Replace('_$(LCLWidgetType)','',[rfReplaceAll]);
+  TargetFile:=TargetFile.Replace('-$(TargetCPU)','',[rfReplaceAll]);
+  TargetFile:=TargetFile.Replace('-$(TargetOS)','',[rfReplaceAll]);
   tmp:=CBSUBCPUOS.Text;
   tmp:=tmp.Replace(CBCPU.Text+'-'+CBOS.Text,'',[]);
-  tmp:='$(TargetCPU)-$(TargetOS)'+tmp;
+  tmp:='$(LCLWidgetType)-$(TargetCPU)-$(TargetOS)'+tmp;
   if CBSUBCPUOS.Text<>'' then
     Edit1.Text:=TargetFile +'_'+tmp
   else
     Edit1.Text:=TargetFile;
   if (CBSUBCPUOS.Text)='' then
-    Edit1.Text:=TargetFile +'_$(TargetCPU)-$(TargetOS)';
+    Edit1.Text:=TargetFile +'_$(LCLWidgetType)-$(TargetCPU)-$(TargetOS)';
 end;
 
 procedure TQFCompilerRun.Edit1MouseEnter(Sender: TObject);
@@ -722,7 +685,7 @@ begin
     eGDBFileName:=StringReplace(LazarusIDE.GetPrimaryConfigPath,'config_lazarus','fpcbootstrap',[]);
     if SetDirSeparatorsEx(eGDBFileName[Length(eGDBFileName)])<>SetDirSeparatorsEx('/') then
       eGDBFileName:=eGDBFileName+SetDirSeparatorsEx('/');
-    eGDBFileName:=SetDirSeparatorsEx(eGDBFileName+GetCompiledTargetCPU+'-'+GetCompiledTargetOS+
+    eGDBFileName:=SetDirSeparatorsEx(eGDBFileName+lowerCase({$I %FPCTARGETCPU%})+'-'+lowerCase({$I %FPCTARGETOS%})+
       '/gdb/'+TargetCPUOS+'/gdb'{$ifdef windows}+'.exe'{$endif});
 
     eLocalFileName:=ExtractFilePath(LazarusIDE.ActiveProject.ProjectInfoFile)+TargetFile;
@@ -742,10 +705,13 @@ begin
   TargetFile:=LazarusIDE.ActiveProject.LazCompilerOptions.TargetFilename;
   if pos('$(TargetCPU)',TargetFile)>0 then
     TargetFile:=copy(TargetFile,1,pos('$(TargetCPU)',TargetFile)-2);
+  TargetFile:=TargetFile.Replace('_$(LCLWidgetType)','',[rfReplaceAll]);
+  TargetFile:=TargetFile.Replace('-$(TargetCPU)','',[rfReplaceAll]);
+  TargetFile:=TargetFile.Replace('-$(TargetOS)','',[rfReplaceAll]);
 
   tmp:=CBSUBCPUOS.Text;
   tmp:=tmp.Replace(CBCPU.Text+'-'+CBOS.Text,'',[]);
-  tmp:='$(TargetCPU)-$(TargetOS)'+tmp;
+  tmp:='$(LCLWidgetType)-$(TargetCPU)-$(TargetOS)'+tmp;
   if CBSUBCPUOS.Text<>'' then
     Edit1.Text:=TargetFile +'_'+tmp
   else
@@ -757,10 +723,34 @@ var
   Config: TConfigStorage;
   TargetFile:String;
   GenerateDebugInfo:String;
+  function CreateBuildMatrixOptionGUID: string;
+  var
+    i: Integer;
+  begin
+    SetLength(Result{%H-},12);
+    for i:=1 to length(Result) do
+      Result[i]:=chr(ord('0')+random(10));
+  end;
+
 begin
   Config:=GetIDEConfigStorage(LazarusIDE.ActiveProject.ProjectInfoFile,true);
   if Config.GetValue('ProjectOptions/Version/Value','')<>'' then
   begin
+    if WidgetTypecbx.Text<>'' then
+    begin
+      Config.SetValue('ProjectOptions/MacroValues/Count/','1');
+      Config.SetValue('ProjectOptions/MacroValues/Macro1/Name','LCLWidgetType');
+      Config.SetValue('ProjectOptions/MacroValues/Macro1/Value',WidgetTypecbx.Text);
+
+      Config.SetValue('ProjectOptions/BuildModes/Item/Name','Default');
+      Config.SetValue('ProjectOptions/BuildModes/Default','True');
+      Config.SetValue('ProjectOptions/BuildModes/SharedMatrixOptions/Count','1');
+      Config.SetValue('ProjectOptions/BuildModes/SharedMatrixOptions/Item1/ID',CreateBuildMatrixOptionGUID);
+      Config.SetValue('ProjectOptions/BuildModes/SharedMatrixOptions/Item1/Modes','Default');
+      Config.SetValue('ProjectOptions/BuildModes/SharedMatrixOptions/Item1/Type','IDEMacro');
+      Config.SetValue('ProjectOptions/BuildModes/SharedMatrixOptions/Item1/MacroName','LCLWidgetType');
+      Config.SetValue('ProjectOptions/BuildModes/SharedMatrixOptions/Item1/Value',WidgetTypecbx.Text);
+    end;
     GenerateDebugInfo:=Config.GetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','');
     if ComboBox1.ItemIndex=1 then
       Config.SetValue('CompilerOptions/Linking/Debugging/GenerateDebugInfo/Value','False')
@@ -778,7 +768,16 @@ end;
 procedure TQFCompilerRun.FormCreate(Sender: TObject);
 var
   crossdir:String;
+  Config: TConfigStorage;
 begin
+  Config:=GetIDEConfigStorage(LazarusIDE.ActiveProject.ProjectInfoFile,true);
+  if Config.GetValue('ProjectOptions/BuildModes/SharedMatrixOptions/Item1/Value','')<>'' then
+  begin
+    WidgetTypecbx.Text:= Config.getValue('ProjectOptions/BuildModes/SharedMatrixOptions/Item1/Value','');
+  end
+  else
+    WidgetTypecbx.Text:='';
+  Config.Free;
   Self.Caption:=formcaption;
   Label3.Caption:=OSSuboptions;
   Label4.Caption:=TargetFileName;
@@ -813,6 +812,8 @@ end;
 
 procedure TQFCompilerRun.btnRemoteDebugClick(Sender: TObject);
 begin
+  if copy(CBOS.Text,1,3)='win' then
+    WidgetTypecbx.Text:='';
   SaveProjectConfig;
   ModifyFpccfg;
   SetProjectDebugConfig;
@@ -821,9 +822,11 @@ begin
   //编译当前project
   if LazarusIDE.DoBuildProject(crBuild,[]) = mrOK then
   begin
-    if ((lowerCase(CBCPU.Text)=lowerCase({$I %FPCTARGETCPU%})) and
-      (lowerCase(CBOS.Text)=lowerCase({$I %FPCTARGETOS%}))) or
-      (lowerCase(copy(CBOS.Text,1,3))='win') and (copy(lowerCase({$I %FPCTARGETOS%}),1,3)='win') then
+    if (((lowerCase(CBCPU.Text)=lowerCase({$I %FPCTARGETCPU%})) and
+      (lowerCase(CBOS.Text)=lowerCase({$I %FPCTARGETOS%})))) or
+      ((lowerCase(copy(CBOS.Text,1,3))='win') and
+       (copy(lowerCase({$I %FPCTARGETOS%}),1,3)='win') and
+       (lowerCase(CBCPU.Text)=lowerCase({$I %FPCTARGETCPU%}))) then
     begin
       LazarusIDE.DoRunProject;
       Close;

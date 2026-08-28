@@ -1,59 +1,61 @@
 object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   Left = 309
-  Height = 320
+  Height = 640
   Top = 203
-  Width = 357
-  BorderIcons = [biSystemMenu]
+  Width = 714
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsDialog
   Caption = 'QFUpdate Cross Library Assistant'
-  ClientHeight = 320
-  ClientWidth = 357
+  ClientHeight = 640
+  ClientWidth = 714
   Color = clBtnFace
+  DesignTimePPI = 192
   Font.CharSet = ANSI_CHARSET
   Font.Color = clBlack
-  Font.Height = -12
+  Font.Height = -24
   Font.Name = 'Century'
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
   Position = poScreenCenter
-  LCLVersion = '4.6.0.0'
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   object Label4: TLabel
-    Left = 162
-    Height = 13
-    Top = 10
-    Width = 65
+    Left = 324
+    Height = 28
+    Top = 20
+    Width = 129
     Caption = 'Server Port'
   end
   object Label5: TLabel
-    Left = 8
-    Height = 13
-    Top = 10
-    Width = 86
+    Left = 16
+    Height = 28
+    Top = 20
+    Width = 171
     Caption = 'Server Address'
   end
   object eServerPort: TEdit
-    Left = 162
-    Height = 35
-    Top = 30
-    Width = 94
+    Left = 324
+    Height = 36
+    Top = 60
+    Width = 188
     TabOrder = 1
     Text = '8080'
   end
   object eServerAddr: TEdit
-    Left = 8
-    Height = 35
-    Top = 30
-    Width = 142
+    Left = 16
+    Height = 36
+    Top = 60
+    Width = 284
     TabOrder = 0
     Text = '127.0.0.1'
   end
   object pInfo: TPanel
     Left = 0
-    Height = 22
-    Top = 298
-    Width = 357
+    Height = 44
+    Top = 596
+    Width = 714
     Align = alBottom
     BevelOuter = bvLowered
     ParentBackground = False
@@ -62,12 +64,12 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   object btnUpdateLibrary: TButton
     AnchorSideTop.Control = Button1
     AnchorSideTop.Side = asrBottom
-    Left = 8
-    Height = 29
-    Top = 240
-    Width = 340
+    Left = 16
+    Height = 58
+    Top = 401
+    Width = 680
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 10
+    BorderSpacing.Top = 20
     Caption = '更新交叉编译lib文件'
     TabOrder = 2
     OnClick = btnUpdateLibraryClick
@@ -75,32 +77,32 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   object Label6: TLabel
     AnchorSideTop.Control = btnUpdateLibrary
     AnchorSideTop.Side = asrBottom
-    Left = 8
-    Height = 13
-    Top = 274
-    Width = 39
-    BorderSpacing.Top = 5
+    Left = 16
+    Height = 28
+    Top = 469
+    Width = 75
+    BorderSpacing.Top = 10
     Caption = 'Label6'
   end
   object Label7: TLabel
     AnchorSideTop.Control = Label6
     AnchorSideTop.Side = asrBottom
-    Left = 8
-    Height = 13
-    Top = 292
-    Width = 39
-    BorderSpacing.Top = 5
+    Left = 16
+    Height = 28
+    Top = 507
+    Width = 75
+    BorderSpacing.Top = 10
     Caption = 'Label7'
   end
   object CBOS: TComboBox
     AnchorSideTop.Control = Label1
     AnchorSideTop.Side = asrBottom
-    Left = 8
-    Height = 30
-    Top = 87
-    Width = 116
-    BorderSpacing.Top = 2
-    ItemHeight = 0
+    Left = 16
+    Height = 36
+    Top = 176
+    Width = 232
+    BorderSpacing.Top = 4
+    ItemHeight = 28
     ItemIndex = 0
     Items.Strings = (
       'linux'
@@ -113,33 +115,33 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     OnChange = CBOSChange
   end
   object Label1: TLabel
-    Left = 8
-    Height = 13
-    Top = 72
-    Width = 20
+    Left = 16
+    Height = 28
+    Top = 144
+    Width = 41
     Caption = 'OS:'
   end
   object Label2: TLabel
     AnchorSideLeft.Control = Label1
     AnchorSideTop.Control = CBOS
     AnchorSideTop.Side = asrBottom
-    Left = 8
-    Height = 18
-    Top = 122
-    Width = 39
-    BorderSpacing.Top = 5
+    Left = 16
+    Height = 28
+    Top = 222
+    Width = 77
+    BorderSpacing.Top = 10
     Caption = 'CPU：'
   end
   object CBCPU: TComboBox
     AnchorSideLeft.Control = Label1
     AnchorSideTop.Control = Label2
     AnchorSideTop.Side = asrBottom
-    Left = 8
-    Height = 30
-    Top = 142
-    Width = 116
-    BorderSpacing.Top = 2
-    ItemHeight = 0
+    Left = 16
+    Height = 36
+    Top = 254
+    Width = 232
+    BorderSpacing.Top = 4
+    ItemHeight = 28
     ItemIndex = 0
     Items.Strings = (
       'aarch64'
@@ -157,34 +159,34 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   object CBSUBCPUOS: TComboBox
     AnchorSideTop.Control = Label3
     AnchorSideTop.Side = asrBottom
-    Left = 132
-    Height = 30
-    Top = 87
-    Width = 216
+    Left = 264
+    Height = 36
+    Top = 176
+    Width = 432
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 2
-    ItemHeight = 0
+    BorderSpacing.Top = 4
+    ItemHeight = 28
     Style = csDropDownList
     TabOrder = 6
     OnChange = CBSUBCPUOSChange
   end
   object Label3: TLabel
     AnchorSideTop.Control = Label1
-    Left = 132
-    Height = 13
-    Top = 72
-    Width = 89
+    Left = 264
+    Height = 28
+    Top = 144
+    Width = 179
     Caption = 'OS Sub options:'
   end
   object Edit1: TEdit
     AnchorSideTop.Control = Label8
     AnchorSideTop.Side = asrBottom
-    Left = 8
-    Height = 35
+    Left = 16
+    Height = 36
     Hint = '待添加的lib目录名称'
-    Top = 200
-    Width = 228
-    BorderSpacing.Top = 2
+    Top = 338
+    Width = 456
+    BorderSpacing.Top = 5
     ParentShowHint = False
     ShowHint = True
     TabOrder = 7
@@ -193,10 +195,10 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   object Button1: TButton
     AnchorSideTop.Control = Edit1
     AnchorSideTop.Side = asrCenter
-    Left = 240
-    Height = 25
-    Top = 205
-    Width = 108
+    Left = 480
+    Height = 50
+    Top = 331
+    Width = 216
     Anchors = [akTop, akLeft, akRight]
     Caption = '添加目录'
     TabOrder = 8
@@ -205,11 +207,11 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
   object Label8: TLabel
     AnchorSideTop.Control = CBCPU
     AnchorSideTop.Side = asrBottom
-    Left = 8
-    Height = 18
-    Top = 180
-    Width = 99
-    BorderSpacing.Top = 8
+    Left = 16
+    Height = 28
+    Top = 305
+    Width = 197
+    BorderSpacing.Top = 15
     Caption = '待添加lib目录名称'
   end
   object RtcHttpClient1: TRtcHttpClient
@@ -217,8 +219,8 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     ServerAddr = 'localhost'
     ServerPort = '80'
     AutoConnect = True
-    Left = 256
-    Top = 8
+    Left = 512
+    Top = 16
   end
   object RtcDataRequest1: TRtcDataRequest
     AutoSyncEvents = True
@@ -228,7 +230,7 @@ object QFRemoteUpdateCrossLib: TQFRemoteUpdateCrossLib
     OnDataOut = RtcDataRequest1DataOut
     OnDataIn = RtcDataRequest1DataIn
     OnDataSent = RtcDataRequest1DataSent
-    Left = 256
-    Top = 56
+    Left = 512
+    Top = 112
   end
 end

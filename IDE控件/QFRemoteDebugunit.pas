@@ -7,6 +7,7 @@ interface
 uses
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, rtcDataCli, rtcInfo, rtcConn, rtcHttpCli, StdCtrls, ExtCtrls, IniFiles,
+  FPCAdds,LazUtils,
   rtcSystem, rtcCliModule,
   DefaultTranslator,
   //IDE 调试助手需要用到的单元
@@ -282,7 +283,7 @@ begin
 
     if SetDirSeparatorsEx(eGDBFileName[Length(eGDBFileName)])<>SetDirSeparatorsEx('/') then
       eGDBFileName:=eGDBFileName+SetDirSeparatorsEx('/');
-    eGDBFileName:=SetDirSeparatorsEx(eGDBFileName+GetCompiledTargetCPU+'-'+GetCompiledTargetOS+
+    eGDBFileName:=SetDirSeparatorsEx(eGDBFileName+FPCAdds.GetCompiledTargetCPU+'-'+GetCompiledTargetOS+
       '/gdb/'+TargetCPUOS+'/gdb'{$ifdef windows}+'.exe'{$endif});
 
     CreateGUID(guid);
